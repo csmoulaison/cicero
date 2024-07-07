@@ -1,0 +1,3 @@
+/home/csmoulaison/repos/cicero/build/CMakeFiles/cicero.dir
+/home/csmoulaison/repos/cicero/build/CMakeFiles/edit_cache.dir
+/home/csmoulaison/repos/cicero/build/CMakeFiles/rebuild_cache.dir
