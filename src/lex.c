@@ -3,7 +3,7 @@
 #include <string.h>
 
 // Converts a source file into lexical tokens.
-void lex(const char* src, const uint32_t tokens_max, Token* out_tokens) {
+void lex_file(const char* src, const uint32_t tokens_max, Token* out_tokens) {
 	// Initialize global map of keyword string/token type pairs in order to easily
 	//   check for hardcoded keyword strings during lexical analysis.
 	init_token_keyword_map();
@@ -47,6 +47,10 @@ void lex(const char* src, const uint32_t tokens_max, Token* out_tokens) {
 
 	// _TOKENS_END serves as the null-terminator marking the end of the tokens
 	out_tokens[tokens_len] = (Token){_TOKENS_END, NULL};
+}
+
+void lex_token() {
+	// Put some of the above mess in here. Let's try to SOME compartmentalization with this one?
 }
 
 // Returns 1 on matched keyword, 1 if not matched.

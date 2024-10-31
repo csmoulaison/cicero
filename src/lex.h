@@ -34,6 +34,6 @@ struct {
 
 static char g_token_keyword_map[KEYWORD_MAX][KEYWORD_STR_MAX];
 
-void lex(const char* src, const uint32_t tokens_max, Token* out_tokens);
+void lex_file(const char* src, const uint32_t tokens_max, Token* out_tokens);
 static bool try_keyword(const char* src, const char* keyword, uint32_t* out_index);
 void init_token_keyword_map();
