@@ -1,4 +1,4 @@
-# Install script for directory: /home/csmoulaison/repos/cicero/src
+# Install script for directory: /home/csmoulaison/repos/cicero/build
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

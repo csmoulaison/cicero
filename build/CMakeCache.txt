@@ -222,16 +222,7 @@ cicero_BINARY_DIR:STATIC=/home/csmoulaison/repos/cicero/build
 cicero_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
-cicero_SOURCE_DIR:STATIC=/home/csmoulaison/repos/cicero/src
-
-//Value Computed by CMake
-minirogue_BINARY_DIR:STATIC=/home/csmoulaison/repos/cicero/build
-
-//Value Computed by CMake
-minirogue_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-minirogue_SOURCE_DIR:STATIC=/home/csmoulaison/repos/cicero/src
+cicero_SOURCE_DIR:STATIC=/home/csmoulaison/repos/cicero/build
 
 
 ########################
@@ -320,7 +311,7 @@ CMAKE_GENERATOR_PLATFORM:INTERNAL=
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
-CMAKE_HOME_DIRECTORY:INTERNAL=/home/csmoulaison/repos/cicero/src
+CMAKE_HOME_DIRECTORY:INTERNAL=/home/csmoulaison/repos/cicero/build
 //Install .so files without execute permission.
 CMAKE_INSTALL_SO_NO_EXE:INTERNAL=0
 //ADVANCED property for variable: CMAKE_LINKER

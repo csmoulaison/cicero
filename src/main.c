@@ -1,19 +1,24 @@
 #include <stdio.h>
-#include "interpreter.h"
+#include "file.h"
+#include "lex.h"
 
-int main(int argc, char **argv) {
-    if(argc > 2) {
-        printf("Too many arguments. Expected 1.\n");
-        printf("Usage:\n");
-        printf("  cicero: start the interactive interpreter.\n");
-        printf("  cicero <script>: run a script file.\n");
-        return 1;
-    }
+#define TOKENS_MAX 256
+#define SRC_MAX 8192
 
-    if(argc == 1) {
-        return run_interactive_interpreter();
-    }
+int main(int argc, const char** argv) {
+	// Error check: wrong number of arguments
+	if(argc != 2) {
+		printf("Error: Expected 1 argument, and you gave %i. You need to specify the source file. (e.g. 'cicero <input.ci>') \n", argc - 1);
+		return 1;
+	}
 
-    return run_file_interpreter(argv[1]);
-    return 0;
+	// Read file
+	char src[SRC_MAX];
+	file_to_string(argv[1], SRC_MAX, src);
+
+	// Lexical analysis
+	Token tokens[TOKENS_MAX];
+	lex(src, TOKENS_MAX, tokens);
+	
+	return 0;
 }

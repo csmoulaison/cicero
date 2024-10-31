@@ -57,7 +57,7 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/csmoulaison/repos/cicero/src
+CMAKE_SOURCE_DIR = /home/csmoulaison/repos/cicero/build
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /home/csmoulaison/repos/cicero/build
@@ -129,29 +129,77 @@ cicero/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/build
 .PHONY : cicero/fast
 
-main.o: main.c.o
-.PHONY : main.o
+home/csmoulaison/repos/cicero/src/file.o: home/csmoulaison/repos/cicero/src/file.c.o
+.PHONY : home/csmoulaison/repos/cicero/src/file.o
 
 # target to build an object file
-main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/main.c.o
-.PHONY : main.c.o
+home/csmoulaison/repos/cicero/src/file.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o
+.PHONY : home/csmoulaison/repos/cicero/src/file.c.o
 
-main.i: main.c.i
-.PHONY : main.i
+home/csmoulaison/repos/cicero/src/file.i: home/csmoulaison/repos/cicero/src/file.c.i
+.PHONY : home/csmoulaison/repos/cicero/src/file.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/main.c.i
-.PHONY : main.c.i
+home/csmoulaison/repos/cicero/src/file.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.i
+.PHONY : home/csmoulaison/repos/cicero/src/file.c.i
 
-main.s: main.c.s
-.PHONY : main.s
+home/csmoulaison/repos/cicero/src/file.s: home/csmoulaison/repos/cicero/src/file.c.s
+.PHONY : home/csmoulaison/repos/cicero/src/file.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/main.c.s
-.PHONY : main.c.s
+home/csmoulaison/repos/cicero/src/file.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.s
+.PHONY : home/csmoulaison/repos/cicero/src/file.c.s
+
+home/csmoulaison/repos/cicero/src/lex.o: home/csmoulaison/repos/cicero/src/lex.c.o
+.PHONY : home/csmoulaison/repos/cicero/src/lex.o
+
+# target to build an object file
+home/csmoulaison/repos/cicero/src/lex.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o
+.PHONY : home/csmoulaison/repos/cicero/src/lex.c.o
+
+home/csmoulaison/repos/cicero/src/lex.i: home/csmoulaison/repos/cicero/src/lex.c.i
+.PHONY : home/csmoulaison/repos/cicero/src/lex.i
+
+# target to preprocess a source file
+home/csmoulaison/repos/cicero/src/lex.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.i
+.PHONY : home/csmoulaison/repos/cicero/src/lex.c.i
+
+home/csmoulaison/repos/cicero/src/lex.s: home/csmoulaison/repos/cicero/src/lex.c.s
+.PHONY : home/csmoulaison/repos/cicero/src/lex.s
+
+# target to generate assembly for a file
+home/csmoulaison/repos/cicero/src/lex.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.s
+.PHONY : home/csmoulaison/repos/cicero/src/lex.c.s
+
+home/csmoulaison/repos/cicero/src/main.o: home/csmoulaison/repos/cicero/src/main.c.o
+.PHONY : home/csmoulaison/repos/cicero/src/main.o
+
+# target to build an object file
+home/csmoulaison/repos/cicero/src/main.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o
+.PHONY : home/csmoulaison/repos/cicero/src/main.c.o
+
+home/csmoulaison/repos/cicero/src/main.i: home/csmoulaison/repos/cicero/src/main.c.i
+.PHONY : home/csmoulaison/repos/cicero/src/main.i
+
+# target to preprocess a source file
+home/csmoulaison/repos/cicero/src/main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.i
+.PHONY : home/csmoulaison/repos/cicero/src/main.c.i
+
+home/csmoulaison/repos/cicero/src/main.s: home/csmoulaison/repos/cicero/src/main.c.s
+.PHONY : home/csmoulaison/repos/cicero/src/main.s
+
+# target to generate assembly for a file
+home/csmoulaison/repos/cicero/src/main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.s
+.PHONY : home/csmoulaison/repos/cicero/src/main.c.s
 
 # Help Target
 help:
@@ -162,9 +210,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... cicero"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... home/csmoulaison/repos/cicero/src/file.o"
+	@echo "... home/csmoulaison/repos/cicero/src/file.i"
+	@echo "... home/csmoulaison/repos/cicero/src/file.s"
+	@echo "... home/csmoulaison/repos/cicero/src/lex.o"
+	@echo "... home/csmoulaison/repos/cicero/src/lex.i"
+	@echo "... home/csmoulaison/repos/cicero/src/lex.s"
+	@echo "... home/csmoulaison/repos/cicero/src/main.o"
+	@echo "... home/csmoulaison/repos/cicero/src/main.i"
+	@echo "... home/csmoulaison/repos/cicero/src/main.s"
 .PHONY : help
 
 
