@@ -5,6 +5,26 @@
 #define TOKENS_MAX 256
 #define SRC_MAX 8192
 
+// Agenda: parse tree somehwere in here
+// - Lex int literals
+// - Parse 'return <int> (newline)' statement
+// - Lex / parse printline
+// ---
+// - Lex operators
+// - Parse arithmetic operations with int literals
+// ---
+// - Lex identifiers
+// - Store (print) variables
+// - Arithmetic on variables
+// ---
+// - Marks and jumps
+// ---
+// - Conditional jumps
+// ---
+// - Any more operators?
+// ---
+// - Make a toy project (calculator? idk, something that only uses numbers
+
 int main(int argc, const char** argv) {
 	// Error check: wrong number of arguments
 	if(argc != 2) {

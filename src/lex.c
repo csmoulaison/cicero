@@ -92,5 +92,5 @@ void init_token_keyword_map() {
 	strcpy(g_token_keyword_map[_MARK], "mark");
 	strcpy(g_token_keyword_map[_GOTO], "goto");
 	strcpy(g_token_keyword_map[_IF], "if");
-	strcpy(g_token_keyword_map[_PRINT_LINE], "print_line");
+	strcpy(g_token_keyword_map[_PRINT_LINE], "printline");
 }

@@ -6,11 +6,11 @@ c = a + b
 // Conditional jumping to implement a for loop
 i = 0
 mark begin_loop
-goto end_loop if i <= c
+jump end_loop if i <= c
 
-print_line i
+printline i
 i = i + 1
-goto begin_loop
+jump begin_loop
 
 mark end_loop:
 
