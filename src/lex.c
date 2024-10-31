@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+// Converts a source file into lexical tokens.
 void lex(const char* src, const uint32_t tokens_max, Token* out_tokens) {
 	// Initialize global map of keyword string/token type pairs in order to easily
 	//   check for hardcoded keyword strings during lexical analysis.
@@ -11,8 +12,13 @@ void lex(const char* src, const uint32_t tokens_max, Token* out_tokens) {
 	uint32_t src_index = 0;
 	while(src[src_index] != '\0') {
 		// Skip whitepace
-		while(src[src_index] == ' ' || src[src_index] == '\n') {
+		while(src[src_index] == ' ') {
 			src_index++;
+		}
+
+		if(src[src_index] == '\n') {
+			out_tokens[tokens_len] = (Token){_STATEMENT_END, NULL};
+			tokens_len++;
 		}
 		
 		// Check if next token is a keyword.
@@ -39,34 +45,35 @@ void lex(const char* src, const uint32_t tokens_max, Token* out_tokens) {
 		}
 	}
 
-
+	// _TOKENS_END serves as the null-terminator marking the end of the tokens
+	out_tokens[tokens_len] = (Token){_TOKENS_END, NULL};
 }
 
 // Returns 1 on matched keyword, 1 if not matched.
 // "Consumes" the keyword if matched, mutating the current index into src.
 static bool try_keyword(const char* src, const char* keyword, uint32_t* out_index) {
-	uint8_t keyword_i = 0;
-	uint32_t src_i = *out_index;
+	uint8_t keyword_index = 0;
+	uint32_t src_index = *out_index;
 	
-	while(keyword[keyword_i] != '\0') {
+	while(keyword[keyword_index] != '\0') {
 		// If we reach the end of the token without matching:
-		if(src[src_i] == '\0' && src[src_i] != ' ') {
-			//printf("end of src\n  src: &i\n", src_i);
+		if(src[src_index] == '\0' && src[src_index] != ' ') {
+			//printf("end of src\n  src: &i\n", src_index);
 			return false;
 		}
 
 		// If the current chars don't match:
-		if(keyword[keyword_i] != src[src_i]) {
-			//printf("chars dont match!\n  keyword: %i\n  src: %i\n", keyword_i, src_i);
+		if(keyword[keyword_index] != src[src_index]) {
+			//printf("chars dont match!\n  keyword: %i\n  src: %i\n", keyword_index, src_index);
 			return false;
 		}
 
-		keyword_i++;
-		src_i++;
+		keyword_index++;
+		src_index++;
 	}
 
 	// If match found:
-	*out_index = src_i;
+	*out_index = src_index;
 	return true;
 }
 

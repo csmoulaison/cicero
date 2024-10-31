@@ -9,14 +9,22 @@
 #define NULL_KEYWORD "NOKEY"
 
 enum TokenType {
+	// Keywords - lexed
 	_RETURN,
-	_STATEMENT_END,
 	_MARK,
 	_GOTO,
 	_IF,
-	_INT_LITERAL,
 	_PRINT_LINE,
-	_END_PROGRAM
+	// Operators - to lex
+	_OP_EQUALS,
+	_OP_ADD,
+	_OP_SUB,
+	// Literals - to lex
+	_INT_LITERAL,
+	// Special - to lex
+	_IDENTIFIER,
+	_STATEMENT_END,
+	_TOKENS_END, // lexed
 };
 
 struct {
