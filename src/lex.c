@@ -1,14 +1,38 @@
 #include "lex.h"
 #include <stdio.h>
 #include <string.h>
+#include "generated/consume_procedures.h"
 
 // Converts a source file into lexical tokens.
-void lex_file(const char* src, const uint32_t tokens_max, Token* out_tokens) {
-	// Initialize global map of keyword string/token type pairs in order to easily
-	//   check for hardcoded keyword strings during lexical analysis.
-	init_token_keyword_map();
+void lex_file(const char* src, const uint32_t tokens_max, Token* tokens) {
+	uint32_t src_index = 0;
+	uint32_t tokens_index = 0;
+	while(src[src_index] != '\0') {
+		if(tokens_index >= tokens_max) {
+			printf("Trying to find another token, but we have already reached the token max! (%i)", tokens_max);
+		}
+		
+		while(src[src_index] == ' ') {
+			src_index++;
+		}
+
+		ConsumeTokenRes consume_res;
+		for(int proc_index = 0; proc_index < CONSUME_PROCEDURES_LEN; proc_index++) {
+			consume_res = consume_procedures[proc_index](src);
+
+			if(consume_res.success) {
+				src_index += consume_res.chars_read;
+				tokens[tokens_index] = consume_res.token;
+				tokens_index++;
+			}
+		}
+	}
+
+
+
 	
-	uint32_t tokens_len = 0;
+
+	
 	uint32_t src_index = 0;
 	while(src[src_index] != '\0') {
 		// Skip whitepace
@@ -19,78 +43,102 @@ void lex_file(const char* src, const uint32_t tokens_max, Token* out_tokens) {
 		if(src[src_index] == '\n') {
 			out_tokens[tokens_len] = (Token){_STATEMENT_END, NULL};
 			tokens_len++;
+			src_index++;
+		}
+
+		if(try_keyword(src, &src_index)) {
+
 		}
 		
-		// Check if next token is a keyword.
-		uint8_t token_map_index = 0;
-		// Iterate through a global map of keyword string/token type pairs, looking
-		//   for a match.
-		while(token_map_index != KEYWORD_MAX) {	
-			if(g_token_keyword_map[token_map_index] == NULL_KEYWORD) {
-				printf("NULL KEYWORD check\n");
-				token_map_index++;
-				continue;
-			}
-			
-			if(try_keyword(src, g_token_keyword_map[token_map_index], &src_index)) {
-				out_tokens[tokens_len] = (Token){token_map_index, NULL};
-				tokens_len++;
-
-				printf("Keyword found '%s'\n", g_token_keyword_map[token_map_index]);
-
-				break;
-			}
-
-			token_map_index++;
-		}
+		
 	}
 
 	// _TOKENS_END serves as the null-terminator marking the end of the tokens
 	out_tokens[tokens_len] = (Token){_TOKENS_END, NULL};
 }
 
-void lex_token() {
-	// Put some of the above mess in here. Let's try to SOME compartmentalization with this one?
+static ConsumeTokenRes consume_statement_end(const char* src) {
+	ConsumeTokenRes res;
+
+
+	res.success = false;
+	return res
 }
 
-// Returns 1 on matched keyword, 1 if not matched.
-// "Consumes" the keyword if matched, mutating the current index into src.
-static bool try_keyword(const char* src, const char* keyword, uint32_t* out_index) {
-	uint8_t keyword_index = 0;
-	uint32_t src_index = *out_index;
+static ConsumeTokenRes consume_keyword(const char* src, const uint32_t src_index) {
+	ConsumeTokenRes res;
+	const uint32_t initial_src_index = src_index;
 	
-	while(keyword[keyword_index] != '\0') {
-		// If we reach the end of the token without matching:
-		if(src[src_index] == '\0' && src[src_index] != ' ') {
-			//printf("end of src\n  src: &i\n", src_index);
-			return false;
+	// Check if next token is a keyword.
+	uint8_t token_map_index = 0;
+	// Iterate through a global map of keyword string/token type pairs, looking
+	//   for a match.
+	while(token_map_index != KEYWORD_MAX) {	
+		if(token_to_keyword_map[token_map_index] == NULL_KEYWORD) {
+			token_map_index++;
+			continue;
 		}
 
-		// If the current chars don't match:
-		if(keyword[keyword_index] != src[src_index]) {
-			//printf("chars dont match!\n  keyword: %i\n  src: %i\n", keyword_index, src_index);
-			return false;
+		// Check for one of the keywords
+		uint8_t keyword_index = 0;
+		while(keyword[keyword_index] != '\0') {
+			// If we reach the end of the token without matching:
+			if(src[src_index] == '\0' && src[src_index] != ' ') {
+				res.success = false;
+				return res;
+			}
+
+			// If the current chars don't match:
+			if(keyword[keyword_index] != src[src_index]) {
+				res.success = false;
+				return res;
+			}
+
+			keyword_index++;
+			src_index++;
 		}
 
-		keyword_index++;
-		src_index++;
+		// If match found:
+		*out_index = src_index;
+		return true;
+
+		if(try_keyword(src, token_to_keyword_map[token_map_index], &src_index)) {
+			tokens[tokens_len] = (Token){token_map_index, NULL};
+			tokens_len++;
+
+			printf("Keyword found '%s'\n", token_to_keyword_map[token_map_index]);
+
+			break;
+		}
+
+		token_map_index++;
 	}
 
-	// If match found:
-	*out_index = src_index;
-	return true;
 }
 
-// Stores token keyword string pairs in the global map of keyword string/token
-//   type pairs
-void init_token_keyword_map() {
-	for(int i = 0; i <= KEYWORD_MAX; i++) {
-		strcpy(g_token_keyword_map[i], NULL_KEYWORD);
-	}
-	
-	strcpy(g_token_keyword_map[_RETURN], "return");
-	strcpy(g_token_keyword_map[_MARK], "mark");
-	strcpy(g_token_keyword_map[_GOTO], "goto");
-	strcpy(g_token_keyword_map[_IF], "if");
-	strcpy(g_token_keyword_map[_PRINT_LINE], "printline");
+static ConsumeTokenRes consume_operator(const char* src) {
+	// TODO: Implement
+	// ...
+
+	ConsumeTokenRes res;
+	res.success = false;
+	return res
+}
+
+static ConsumeTokenRes consume_int_literal(const char* src) {
+	// TODO: Implement
+	// ...
+
+	ConsumeTokenRes res;
+	res.success = false;
+	return res
+}
+
+static ConsumeTokenRes consume_identifier(const char* src) {
+	// TODO: Implement
+	// ...
+
+	ConsumeTokenRes res;
+	res.success = false;
+	return res
 }
