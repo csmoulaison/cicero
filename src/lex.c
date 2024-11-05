@@ -1,33 +1,35 @@
 #include "lex.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "generated/lex_procedures.h"
 #include "generated/token_to_keyword_map.h"
 
 // Converts a source file into lexical tokens.
 void lex_source(const char* src, const uint32_t tokens_max, Token* tokens) {
+	printf("\nStarting lexical analysis...\n");
+
 	uint32_t src_index = 0;
 	uint32_t token_index = 0;
 	while(src[src_index] != '\0') {
-		printf("keep reading\n");
-		
 		if(token_index >= tokens_max) {
-			printf("Error: Trying to lex another token, but we have already reached the token max! (%i)\n", tokens_max);
-			goto finish_lex_file;
+			printf("Error: Trying to lex another token, but we have already reached the token max. (%i)\n", tokens_max);
+			return;
 		}
 		
 		while(src[src_index] == ' ') {
-			printf("  skip\n");
 			src_index++;
 		}
 
 		LexTokenResult lex_result;
 		for(int proc_index = 0; proc_index < LEX_PROCEDURES_LEN; proc_index++) {
-			printf("  iterate procs\n");
 			lex_result = lex_procedures[proc_index](src, src_index);
 
+			if(lex_result.abort) {
+				goto abort_lexical_analysis;
+			}
+
 			if(lex_result.success) {
-				printf("    (procs success)\n");
 				src_index += lex_result.chars_read;
 				tokens[token_index] = lex_result.token;
 				token_index++;
@@ -36,19 +38,26 @@ void lex_source(const char* src, const uint32_t tokens_max, Token* tokens) {
 		}
 
 		if(!lex_result.success) {
-			printf("Error: no valid lexical token at index %i!\n", src_index);
-			goto finish_lex_file;
+			printf("Error: No valid lexical token at index %i.\n", src_index);
+			goto abort_lexical_analysis;
 		}
 	}
 
 finish_lex_file:
+	printf("Lexical analysis complete.\n");
 	// _TOKENS_END serves as the null-terminator marking the end of the tokens
 	tokens[token_index] = (Token){_TOKENS_END, 0};
+	return;
+
+abort_lexical_analysis:
+	printf("Lexical analysis aborted.\n");
+	exit(1);
 }
 
 
 static LexTokenResult lex_statement_end(const char* src, uint32_t src_index) {
 	LexTokenResult result;
+	result.abort = false;
 
 	if(src[src_index] == '\n') {
 		result.success = true;
@@ -64,6 +73,8 @@ static LexTokenResult lex_statement_end(const char* src, uint32_t src_index) {
 
 static LexTokenResult lex_keyword(const char* src, uint32_t src_index) {
 	LexTokenResult result;
+	result.abort = false;
+
 	result.success = false;
 	const uint32_t initial_src_index = src_index;
 
@@ -103,6 +114,7 @@ static LexTokenResult lex_keyword(const char* src, uint32_t src_index) {
 
 static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 	LexTokenResult result;
+	result.abort = false;
 
 	switch(src[src_index]) {
 	case '+':
@@ -142,21 +154,59 @@ static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 }
 
 
-static LexTokenResult lex_int_literal(const char* src, uint32_t src_index) {
-	// TODO: Implement
-	// ...
-
+static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 	LexTokenResult result;
-	result.success = false;
+	result.abort = false;
+
+	if(!check_if_digit(src[src_index])) {
+		result.success = false;
+		return result;
+	}
+
+	// 5 is the maximum characters because byte literals can only be 8 bit ints
+	// in range [0..255] and the string is null terminated.
+	char literal_buffer[5];
+	literal_buffer[0] = src[src_index];
+
+	int i = 1;
+	while(check_if_digit(src[src_index + i])) {
+		if(i >= 3) {
+			printf("Error: More than 3 digits in byte literal at index %i. Byte literals can only be in range [0..255].\n", src_index);
+			result.abort = true;
+			return result;
+		}
+
+		literal_buffer[i] = src[src_index + i];
+		i++;
+	}
+
+	literal_buffer[i] = '\0';
+
+	uint64_t i64_representation = atoi(literal_buffer);
+	if(i64_representation > 255) {
+		printf("Error: Byte literal %i at index %i larger than the 8 bit limit of 255.\n", i64_representation, src_index);
+		result.abort = true;
+		return result;
+	}
+
+	result.success = true;
+	result.chars_read = strlen(literal_buffer);
+	result.token.value.byte = i64_representation;
+
 	return result;
 }
 
 
 static LexTokenResult lex_identifier(const char* src, uint32_t src_index) {
-	// TODO: Implement
+	LexTokenResult result;
+	result.abort = false;
+
+	// TODO: Implement identifier lexing
+	//   Consume chars until we hit something which isn't an alphanumeric character.
+	//   If the first character isn't alphanumeric this isn't a valid identifier.
+	//   
 	// ...
 
-	LexTokenResult result;
 	result.success = false;
 	return result;
 }
@@ -173,22 +223,6 @@ static bool check_if_digit(char c) {
 	|| c == '7'
 	|| c == '8'
 	|| c == '9') {
-		return true;
-	}
-
-	return false;
-}
-
-
-static bool check_if_op_char(char c) {
-	if(c == '+'
-	|| c == '-'
-	|| c == '*'
-	|| c == ':'
-	|| c == '!'
-	|| c == '='
-	|| c == '<'
-	|| c == '>') {
 		return true;
 	}
 

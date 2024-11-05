@@ -19,13 +19,14 @@
 struct {
 	enum TokenType type;
 	union {
-		int64_t integer;
-		char identifier[IDENTIFIER_MAX_LEN];
+		uint8_t byte;
+		char string[IDENTIFIER_MAX_LEN];
 	} value;
 } typedef Token;
 
 struct {
 	bool success;
+	bool abort;
 	uint32_t chars_read;
 	Token token;
 } typedef LexTokenResult;
@@ -35,7 +36,7 @@ void lex_source(const char* src, const uint32_t tokens_max, Token* tokens);
 static LexTokenResult lex_statement_end(const char* src, uint32_t src_index);
 static LexTokenResult lex_keyword(const char* src, uint32_t src_index);
 static LexTokenResult lex_operator(const char* src, uint32_t src_index);
-static LexTokenResult lex_int_literal(const char* src, uint32_t src_index);
+static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index);
 static LexTokenResult lex_identifier(const char* src, uint32_t src_index);
 // Helper functions
-static bool check_if_op_char(char c);
+static bool check_if_digit(char c);

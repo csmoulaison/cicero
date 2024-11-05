@@ -32,6 +32,8 @@ int main(int argc, const char** argv) {
 		return 1;
 	}
 
+	printf("Compiling...\n");
+
 	// Read file
 	char src[SRC_MAX];
 	file_to_string(argv[1], SRC_MAX, src);
@@ -40,11 +42,13 @@ int main(int argc, const char** argv) {
 	Token tokens[TOKENS_MAX];
 	lex_source(src, TOKENS_MAX, tokens);
 
+	printf("\nOutput tokens...\n");
 	int i = 0;
 	while(tokens[i].type != _TOKENS_END) {
-		printf("Token %i is type %i.\n", i, tokens[i].type);
+		printf("Token %i is type %i and value %u.\n", i, tokens[i].type, tokens[i].value.byte);
 		i++;
 	}
-	
+
+	printf("\nCompilation complete.\n");
 	return 0;
 }

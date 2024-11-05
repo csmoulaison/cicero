@@ -1,1 +1,2 @@
 mark + return = goto if >
+if = 32 mark < 1 goto goto 255 222

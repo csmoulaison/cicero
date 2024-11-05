@@ -12,6 +12,6 @@ static lex_procedure lex_procedures[LEX_PROCEDURES_LEN] = {
 	lex_statement_end,
 	lex_keyword,
 	lex_operator,
-	lex_int_literal,
+	lex_byte_literal,
 	lex_identifier
 };
