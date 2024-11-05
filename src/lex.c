@@ -5,7 +5,7 @@
 #include "generated/token_to_keyword_map.h"
 
 // Converts a source file into lexical tokens.
-void lex_file(const char* src, const uint32_t tokens_max, Token* tokens) {
+void lex_source(const char* src, const uint32_t tokens_max, Token* tokens) {
 	uint32_t src_index = 0;
 	uint32_t token_index = 0;
 	while(src[src_index] != '\0') {
@@ -46,6 +46,7 @@ finish_lex_file:
 	tokens[token_index] = (Token){_TOKENS_END, 0};
 }
 
+
 static LexTokenResult lex_statement_end(const char* src, uint32_t src_index) {
 	LexTokenResult result;
 
@@ -60,6 +61,7 @@ static LexTokenResult lex_statement_end(const char* src, uint32_t src_index) {
 	return result;
 }
 
+
 static LexTokenResult lex_keyword(const char* src, uint32_t src_index) {
 	LexTokenResult result;
 	result.success = false;
@@ -73,8 +75,8 @@ static LexTokenResult lex_keyword(const char* src, uint32_t src_index) {
 		uint8_t keyword_index = 0;
 		bool token_matched = true;
 		while(keyword[keyword_index] != '\0') {
-			bool end_of_token = (src[src_index] == '\0' && src[src_index] != ' ');
-			bool char_matched = (keyword[keyword_index] == src[src_index]);
+			bool end_of_token = src[src_index] == '\0' && src[src_index] != ' ';
+			bool char_matched = keyword[keyword_index] == src[src_index];
 
 			if(end_of_token || !char_matched) {
 				token_matched = false;
@@ -98,14 +100,47 @@ static LexTokenResult lex_keyword(const char* src, uint32_t src_index) {
 	return result;
 }
 
-static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
-	// TODO: Implement
-	// ...
 
+static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 	LexTokenResult result;
-	result.success = false;
+
+	switch(src[src_index]) {
+	case '+':
+		result.token.type = _OP_ADD;
+		break;
+	case '-':
+		result.token.type = _OP_SUB;
+		break;
+	case '*':
+		result.token.type = _OP_MULTIPLY;
+		break;
+	case ':':
+		result.token.type = _OP_ASSIGN;
+		break;
+	case '!':
+		result.token.type = _OP_LOGICAL_NOT;
+		break;
+	case '=':
+		result.token.type = _OP_EQUALS;
+		break;
+	case '<':
+		result.token.type = _OP_LESS_THAN;
+		break;
+	case '>':
+		result.token.type = _OP_GREATER_THAN;
+		break;
+	// Is not an operator
+	default:
+		result.success = false;
+		return result;
+	}
+
+	// Is an operator
+	result.success = true;
+	result.chars_read = 1;
 	return result;
 }
+
 
 static LexTokenResult lex_int_literal(const char* src, uint32_t src_index) {
 	// TODO: Implement
@@ -116,6 +151,7 @@ static LexTokenResult lex_int_literal(const char* src, uint32_t src_index) {
 	return result;
 }
 
+
 static LexTokenResult lex_identifier(const char* src, uint32_t src_index) {
 	// TODO: Implement
 	// ...
@@ -123,4 +159,38 @@ static LexTokenResult lex_identifier(const char* src, uint32_t src_index) {
 	LexTokenResult result;
 	result.success = false;
 	return result;
+}
+
+
+static bool check_if_digit(char c) {
+	if(c == '0'
+	|| c == '1'
+	|| c == '2'
+	|| c == '3'
+	|| c == '4'
+	|| c == '5'
+	|| c == '6'
+	|| c == '7'
+	|| c == '8'
+	|| c == '9') {
+		return true;
+	}
+
+	return false;
+}
+
+
+static bool check_if_op_char(char c) {
+	if(c == '+'
+	|| c == '-'
+	|| c == '*'
+	|| c == ':'
+	|| c == '!'
+	|| c == '='
+	|| c == '<'
+	|| c == '>') {
+		return true;
+	}
+
+	return false;
 }

@@ -1,20 +1,29 @@
 #pragma once
 
 enum TokenType {
-	// Keywords - lexed
-	_RETURN,
-	_MARK,
-	_GOTO,
-	_IF,
-	_PRINT_LINE,
-	// Operators - to lex
-	_OP_EQUALS,
+	// Keywords: must be first in the file  due to their lazy association with the
+	//   token_to_keyword_map.
+	_KEY_RETURN,
+	_KEY_MARK,
+	_KEY_GOTO,
+	_KEY_IF,
+	_KEY_PRINT_LINE,
+	// Arithmetic operators
 	_OP_ADD,
 	_OP_SUB,
-	// Literals - to lex
+	_OP_MULTIPLY, // division too ambiguous. this is assembly+
+	// Assignment operators
+	_OP_ASSIGN, // :
+	// Unary operators
+	_OP_LOGICAL_NOT,
+	// Comparison operators
+	_OP_EQUALS, // =
+	_OP_LESS_THAN, // never will there be a less than or equals. unnecessary!
+	_OP_GREATER_THAN,
+	// Literals
 	_INT_LITERAL,
-	// Special - to lex
+	// Special
 	_IDENTIFIER,
 	_STATEMENT_END,
-	_TOKENS_END, // lexed
+	_TOKENS_END
 };
