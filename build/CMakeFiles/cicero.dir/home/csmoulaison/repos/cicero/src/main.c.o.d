@@ -36,4 +36,5 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/bits/stdlib-float.h \
  /home/csmoulaison/repos/cicero/src/lex.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
+ /home/csmoulaison/repos/cicero/src/generated/token_type.h

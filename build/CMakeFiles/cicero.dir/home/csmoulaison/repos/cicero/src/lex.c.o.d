@@ -12,6 +12,7 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: \
  /usr/include/bits/stdint-intn.h /usr/include/bits/stdint-uintn.h \
  /usr/include/bits/stdint-least.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
+ /home/csmoulaison/repos/cicero/src/generated/token_type.h \
  /usr/include/stdio.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdarg.h \
@@ -22,4 +23,6 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: \
  /usr/include/bits/stdio_lim.h /usr/include/bits/floatn.h \
  /usr/include/bits/floatn-common.h /usr/include/string.h \
  /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
- /usr/include/strings.h
+ /usr/include/strings.h \
+ /home/csmoulaison/repos/cicero/src/generated/lex_procedures.h \
+ /home/csmoulaison/repos/cicero/src/generated/token_to_keyword_map.h

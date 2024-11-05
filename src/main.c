@@ -2,7 +2,7 @@
 #include "file.h"
 #include "lex.h"
 
-#define TOKENS_MAX 256
+#define TOKENS_MAX 512
 #define SRC_MAX 8192
 
 // Agenda: parse tree somehwere in here
@@ -38,7 +38,13 @@ int main(int argc, const char** argv) {
 
 	// Lexical analysis
 	Token tokens[TOKENS_MAX];
-	lex(src, TOKENS_MAX, tokens);
+	lex_file(src, TOKENS_MAX, tokens);
+
+	int i = 0;
+	while(tokens[i].type != _TOKENS_END) {
+		printf("Token %i is type %i.\n", i, tokens[i].type);
+		i++;
+	}
 	
 	return 0;
 }

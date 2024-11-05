@@ -17,4 +17,4 @@ enum TokenType {
 	_IDENTIFIER,
 	_STATEMENT_END,
 	_TOKENS_END, // lexed
-}
+};
