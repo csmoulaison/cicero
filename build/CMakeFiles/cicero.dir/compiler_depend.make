@@ -114,6 +114,7 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: /home/csmoulais
   /usr/include/bits/waitstatus.h \
   /usr/include/bits/wchar.h \
   /usr/include/bits/wordsize.h \
+  /usr/include/ctype.h \
   /usr/include/endian.h \
   /usr/include/features-time64.h \
   /usr/include/features.h \
@@ -202,6 +203,8 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: /home/csmoulai
 /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h:
 
 /usr/include/strings.h:
+
+/usr/include/ctype.h:
 
 /usr/include/bits/types/locale_t.h:
 

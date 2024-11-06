@@ -6,7 +6,6 @@
 #define SRC_MAX 8192
 
 // Agenda: parse tree somehwere in here
-// - Lex int literals
 // - Parse 'return <int> (newline)' statement
 // - Lex / parse printline
 // ---
@@ -45,7 +44,12 @@ int main(int argc, const char** argv) {
 	printf("\nOutput tokens...\n");
 	int i = 0;
 	while(tokens[i].type != _TOKENS_END) {
-		printf("Token %i is type %i and value %u.\n", i, tokens[i].type, tokens[i].value.byte);
+		if(tokens[i].type == _IDENTIFIER) {
+			printf("Token %i is type %i and value %s.\n", i, tokens[i].type, tokens[i].value.string);
+		} else {
+			printf("Token %i is type %i and value %u.\n", i, tokens[i].type, tokens[i].value.byte);
+		}
+
 		i++;
 	}
 

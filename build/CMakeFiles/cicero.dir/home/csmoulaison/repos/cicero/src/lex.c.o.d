@@ -38,6 +38,6 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/bits/stdlib-float.h /usr/include/string.h \
  /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
- /usr/include/strings.h \
+ /usr/include/strings.h /usr/include/ctype.h \
  /home/csmoulaison/repos/cicero/src/generated/lex_procedures.h \
  /home/csmoulaison/repos/cicero/src/generated/token_to_keyword_map.h

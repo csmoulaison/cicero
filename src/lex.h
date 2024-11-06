@@ -14,13 +14,14 @@
 // TODO: This isn't ideal, as the keyword token map is sparse due to using
 //   TokenType as indices, and there being more TokenTypes than keywords.
 #define NULL_KEYWORD "NOKEY"
-#define IDENTIFIER_MAX_LEN 64
+#define IDENTIFIER_MAX_LEN 63
 
 struct {
 	enum TokenType type;
 	union {
 		uint8_t byte;
-		char string[IDENTIFIER_MAX_LEN];
+		// + 1 because it's a null terminated string
+		char string[IDENTIFIER_MAX_LEN + 1];
 	} value;
 } typedef Token;
 
@@ -39,4 +40,4 @@ static LexTokenResult lex_operator(const char* src, uint32_t src_index);
 static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index);
 static LexTokenResult lex_identifier(const char* src, uint32_t src_index);
 // Helper functions
-static bool check_if_digit(char c);
+static bool check_numeric(char c);

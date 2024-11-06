@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "generated/lex_procedures.h"
 #include "generated/token_to_keyword_map.h"
 
@@ -14,7 +15,7 @@ void lex_source(const char* src, const uint32_t tokens_max, Token* tokens) {
 	while(src[src_index] != '\0') {
 		if(token_index >= tokens_max) {
 			printf("Error: Trying to lex another token, but we have already reached the token max. (%i)\n", tokens_max);
-			return;
+			goto abort_lexical_analysis;
 		}
 		
 		while(src[src_index] == ' ') {
@@ -156,33 +157,34 @@ static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 
 static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 	LexTokenResult result;
+	result.token.type = _BYTE_LITERAL;
 	result.abort = false;
 
-	if(!check_if_digit(src[src_index])) {
+	if(!isdigit(src[src_index])) {
 		result.success = false;
 		return result;
 	}
 
 	// 5 is the maximum characters because byte literals can only be 8 bit ints
 	// in range [0..255] and the string is null terminated.
-	char literal_buffer[5];
-	literal_buffer[0] = src[src_index];
+	char buffer[5];
+	buffer[0] = src[src_index];
 
-	int i = 1;
-	while(check_if_digit(src[src_index + i])) {
+	uint8_t i = 1;
+	while(isdigit(src[src_index + i])) {
 		if(i >= 3) {
 			printf("Error: More than 3 digits in byte literal at index %i. Byte literals can only be in range [0..255].\n", src_index);
 			result.abort = true;
 			return result;
 		}
 
-		literal_buffer[i] = src[src_index + i];
+		buffer[i] = src[src_index + i];
 		i++;
 	}
 
-	literal_buffer[i] = '\0';
+	buffer[i] = '\0';
 
-	uint64_t i64_representation = atoi(literal_buffer);
+	uint64_t i64_representation = atoi(buffer);
 	if(i64_representation > 255) {
 		printf("Error: Byte literal %i at index %i larger than the 8 bit limit of 255.\n", i64_representation, src_index);
 		result.abort = true;
@@ -190,41 +192,42 @@ static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 	}
 
 	result.success = true;
-	result.chars_read = strlen(literal_buffer);
+	result.chars_read = strlen(buffer);
 	result.token.value.byte = i64_representation;
-
 	return result;
 }
 
 
 static LexTokenResult lex_identifier(const char* src, uint32_t src_index) {
 	LexTokenResult result;
+	result.token.type = _IDENTIFIER;
 	result.abort = false;
 
-	// TODO: Implement identifier lexing
-	//   Consume chars until we hit something which isn't an alphanumeric character.
-	//   If the first character isn't alphanumeric this isn't a valid identifier.
-	//   
-	// ...
-
-	result.success = false;
-	return result;
-}
-
-
-static bool check_if_digit(char c) {
-	if(c == '0'
-	|| c == '1'
-	|| c == '2'
-	|| c == '3'
-	|| c == '4'
-	|| c == '5'
-	|| c == '6'
-	|| c == '7'
-	|| c == '8'
-	|| c == '9') {
-		return true;
+	if(!isalnum(src[src_index])) {
+		result.success = false;
+		return result;
 	}
 
-	return false;
+	// + 1 because the identifier is null terminated
+	char* buffer = result.token.value.string;
+	buffer[0] = src[src_index];
+
+	uint8_t i = 1;
+	while(isalnum(src[src_index + i])) {
+		if(i >= IDENTIFIER_MAX_LEN) {
+			printf("Error: Identifier at index %i is longer than the max identifier length of %i\n", src_index, IDENTIFIER_MAX_LEN);
+			result.abort = true;
+			return result;
+		}
+		
+		buffer[i] = src[src_index + i];
+
+		result.success = true;
+
+		i++;
+	}
+	buffer[i] = '\0';
+
+	result.chars_read = strlen(buffer);
+	return result;
 }
