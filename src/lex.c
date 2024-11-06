@@ -203,7 +203,7 @@ static LexTokenResult lex_identifier(const char* src, uint32_t src_index) {
 	result.token.type = _IDENTIFIER;
 	result.abort = false;
 
-	if(!isalnum(src[src_index])) {
+	if(!isalpha(src[src_index])) {
 		result.success = false;
 		return result;
 	}
