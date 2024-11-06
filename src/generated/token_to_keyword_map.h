@@ -8,7 +8,7 @@
 // through all the TokenTypes looking for a keyword match.
 // The TokenTypes must also have all of the keywords at the start for this to work.
 static char token_to_keyword_map[KEYWORD_LEN][KEYWORD_STR_MAX] = {
-	"return",
+	"exit",
 	"mark",
 	"goto",
 	"if",

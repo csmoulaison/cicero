@@ -3,7 +3,7 @@
 enum TokenType {
 	// Keywords: must be first in the file  due to their lazy association with the
 	//   token_to_keyword_map.
-	_KEY_RETURN,
+	_KEY_EXIT,
 	_KEY_MARK,
 	_KEY_GOTO,
 	_KEY_IF,
