@@ -70,21 +70,28 @@ void parse_out(const Token* tokens, uint32_t* token_index, FILE* nasm) {
 }
 
 Expression parse_expression(const Token* tokens, uint32_t* token_index, FILE* nasm) {
-	Expression expr;
-	
-	switch(tokens[*token_index].type) {
-	case TOKEN_BYTE_LITERAL:
-		// TODO: check if followed by operator for binary expr
-		expr.type = EXPR_BYTE;
-		expr.value.byte = tokens[*token_index].value.byte;
+	if(tokens[*token_index].type == TOKEN_BYTE_LITERAL) {
 		*token_index += 1;
-		break;
-	default:
-		// TODO: error
+
+		Expression left = (Expression){EXPR_BYTE, tokens[*token_index - 1].value.byte};
+		if(tokens[*token_index].type == TOKEN_ADD) {
+			*token_index += 1;
+			Expression right = parse_expression(tokens, token_index, nasm);
+
+			if(right.type != EXPR_BYTE) {
+				printf("Error: Expected right hand expression to resolve to a byte literal.\n");
+				exit(1);
+			}
+
+			Expression res = (Expression){EXPR_BYTE, left.value.byte + right.value.byte};
+			return res;
+		} else {
+			return left;
+		}
+		
+	} else {
 		printf("Error: Expected byte literal when parsing expression.\n");
 		exit(1);
-		break;
 	}
-
-	return expr;
+	
 }

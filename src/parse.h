@@ -13,6 +13,9 @@
 #define OBJECT_PATH "program.o"
 #define EXE_PATH "program"
 
+// This isn't actually very useful right now, but it will be if we need to
+// implement a double pass. For now, I'm not too worried about the additional
+// code complexity unnecessarily added for this.
 enum ExpressionType {
 	EXPR_BYTE,
 	EXPR_BINARY,
@@ -21,14 +24,9 @@ enum ExpressionType {
 };
 
 struct {
-
-} typedef BinaryExpression;
-
-struct {
 	enum ExpressionType type;
 	union {
 		uint8_t byte;
-		BinaryExpression binary_expression;
 	} value;
 } typedef Expression;
 

@@ -5,10 +5,7 @@
 
 #define SRC_MAX 8192
 
-// Agenda: parse tree somehwere in here
-// - Parse 'exit <int> (newline)' statement
-// - Parse printline
-// ---
+// Agenda
 // - Parse arithmetic operations with byte literals
 // ---
 // - Store (print) variables
