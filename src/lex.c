@@ -7,14 +7,14 @@
 #include "generated/token_to_keyword_map.h"
 
 // Converts a source file into lexical tokens.
-void lex_source(const char* src, const uint32_t tokens_max, Token* tokens) {
+void lex_source(const char* src, Token* tokens) {
 	printf("\nStarting lexical analysis...\n");
 
 	uint32_t src_index = 0;
 	uint32_t token_index = 0;
 	while(src[src_index] != '\0') {
-		if(token_index >= tokens_max) {
-			printf("Error: Trying to lex another token, but we have already reached the token max. (%i)\n", tokens_max);
+		if(token_index >= TOKENS_MAX) {
+			printf("Error: Trying to lex another token, but we have already reached the token max. (%i)\n", TOKENS_MAX);
 			goto abort_lexical_analysis;
 		}
 		
@@ -46,8 +46,11 @@ void lex_source(const char* src, const uint32_t tokens_max, Token* tokens) {
 
 finish_lex_file:
 	printf("Lexical analysis complete.\n");
-	// _TOKENS_END serves as the null-terminator marking the end of the tokens
-	tokens[token_index] = (Token){_TOKENS_END, 0};
+	if(tokens[token_index - 1].type != TOKEN_STATEMENT_END) {
+		tokens[token_index] = (Token){TOKEN_STATEMENT_END, 0};
+		token_index++;
+	}
+	tokens[token_index] = (Token){TOKEN_PROGRAM_END, 0};
 	return;
 
 abort_lexical_analysis:
@@ -62,7 +65,7 @@ static LexTokenResult lex_statement_end(const char* src, uint32_t src_index) {
 
 	if(src[src_index] == '\n') {
 		result.success = true;
-		result.token = (Token){_STATEMENT_END, 0};
+		result.token = (Token){TOKEN_STATEMENT_END, 0};
 		result.chars_read = 1;
 		return result;
 	}
@@ -119,28 +122,28 @@ static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 
 	switch(src[src_index]) {
 	case '+':
-		result.token.type = _OP_ADD;
+		result.token.type = TOKEN_ADD;
 		break;
 	case '-':
-		result.token.type = _OP_SUB;
+		result.token.type = TOKEN_SUB;
 		break;
 	case '*':
-		result.token.type = _OP_MULTIPLY;
+		result.token.type = TOKEN_MULTIPLY;
 		break;
 	case ':':
-		result.token.type = _OP_ASSIGN;
+		result.token.type = TOKEN_ASSIGN;
 		break;
 	case '!':
-		result.token.type = _OP_LOGICAL_NOT;
+		result.token.type = TOKEN_LOGICAL_NOT;
 		break;
 	case '=':
-		result.token.type = _OP_EQUALS;
+		result.token.type = TOKEN_EQUALS;
 		break;
 	case '<':
-		result.token.type = _OP_LESS_THAN;
+		result.token.type = TOKEN_LESS_THAN;
 		break;
 	case '>':
-		result.token.type = _OP_GREATER_THAN;
+		result.token.type = TOKEN_GREATER_THAN;
 		break;
 	// Is not an operator
 	default:
@@ -157,7 +160,7 @@ static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 
 static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 	LexTokenResult result;
-	result.token.type = _BYTE_LITERAL;
+	result.token.type = TOKEN_BYTE_LITERAL;
 	result.abort = false;
 
 	if(!isdigit(src[src_index])) {
@@ -200,7 +203,7 @@ static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 
 static LexTokenResult lex_identifier(const char* src, uint32_t src_index) {
 	LexTokenResult result;
-	result.token.type = _IDENTIFIER;
+	result.token.type = TOKEN_IDENTIFIER;
 	result.abort = false;
 
 	if(!isalpha(src[src_index])) {

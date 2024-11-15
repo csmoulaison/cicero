@@ -12,5 +12,5 @@ static char token_to_keyword_map[KEYWORD_LEN][KEYWORD_STR_MAX] = {
 	"mark",
 	"goto",
 	"if",
-	"print_line"
+	"out"
 };

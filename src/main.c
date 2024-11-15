@@ -1,18 +1,16 @@
 #include <stdio.h>
 #include "file.h"
 #include "lex.h"
+#include "parse.h"
 
-#define TOKENS_MAX 512
 #define SRC_MAX 8192
 
 // Agenda: parse tree somehwere in here
-// - Parse 'return <int> (newline)' statement
-// - Lex / parse printline
+// - Parse 'exit <int> (newline)' statement
+// - Parse printline
 // ---
-// - Lex operators
-// - Parse arithmetic operations with int literals
+// - Parse arithmetic operations with byte literals
 // ---
-// - Lex identifiers
 // - Store (print) variables
 // - Arithmetic on variables
 // ---
@@ -39,20 +37,18 @@ int main(int argc, const char** argv) {
 
 	// Lexical analysis
 	Token tokens[TOKENS_MAX];
-	lex_source(src, TOKENS_MAX, tokens);
+	lex_source(src, tokens);
 
-	printf("\nOutput tokens...\n");
-	int i = 0;
-	while(tokens[i].type != _TOKENS_END) {
-		if(tokens[i].type == _IDENTIFIER) {
-			printf("Token %i is type %i and value %s.\n", i, tokens[i].type, tokens[i].value.string);
-		} else {
-			printf("Token %i is type %i and value %u.\n", i, tokens[i].type, tokens[i].value.byte);
-		}
+	parse_program(tokens);
 
-		i++;
-	}
+	// Assemble
+	printf("\nAssembling to executable...\n");
+	system("nasm -f elf64 program.asm -o program.o");
+	system("rm program.asm");
+	system("ld -m elf_x86_64 program.o -o program");
+	system("rm program.o");
+	printf("Assembly complete.\n");
 
-	printf("\nCompilation complete.\n");
+	printf("\nCompilation complete. Executable at \"%s\"\n", EXE_PATH);
 	return 0;
 }

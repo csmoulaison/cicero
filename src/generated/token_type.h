@@ -3,27 +3,27 @@
 enum TokenType {
 	// Keywords: must be first in the file  due to their lazy association with the
 	//   token_to_keyword_map.
-	_KEY_EXIT,
-	_KEY_MARK,
-	_KEY_GOTO,
-	_KEY_IF,
-	_KEY_PRINT_LINE,
+	TOKEN_EXIT,
+	TOKEN_MARK,
+	TOKEN_JUMP,
+	TOKEN_IF,
+	TOKEN_OUT,
 	// Arithmetic operators
-	_OP_ADD,
-	_OP_SUB,
-	_OP_MULTIPLY, // division too ambiguous. this is assembly+
+	TOKEN_ADD,
+	TOKEN_SUB,
+	TOKEN_MULTIPLY, // division too ambiguous. this is assembly+
 	// Assignment operators
-	_OP_ASSIGN, // :
+	TOKEN_ASSIGN, // :
 	// Unary operators
-	_OP_LOGICAL_NOT,
+	TOKEN_LOGICAL_NOT,
 	// Comparison operators
-	_OP_EQUALS, // =
-	_OP_LESS_THAN, // never will there be a less than or equals. unnecessary!
-	_OP_GREATER_THAN,
+	TOKEN_EQUALS, // =
+	TOKEN_LESS_THAN, // never will there be a less than or equals. unnecessary!
+	TOKEN_GREATER_THAN,
 	// Literals
-	_BYTE_LITERAL,
+	TOKEN_BYTE_LITERAL,
 	// Special
-	_IDENTIFIER,
-	_STATEMENT_END,
-	_TOKENS_END
+	TOKEN_IDENTIFIER,
+	TOKEN_STATEMENT_END,
+	TOKEN_PROGRAM_END
 };

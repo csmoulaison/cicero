@@ -13,7 +13,7 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: \
  /usr/include/bits/stdint-least.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
  /home/csmoulaison/repos/cicero/src/generated/token_type.h \
- /usr/include/stdio.h \
+ /home/csmoulaison/repos/cicero/src/token.h /usr/include/stdio.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stddef.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdarg.h \
  /usr/include/bits/types/__fpos_t.h /usr/include/bits/types/__mbstate_t.h \

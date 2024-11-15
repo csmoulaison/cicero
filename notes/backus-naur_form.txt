@@ -1,0 +1,30 @@
+<program> ::= <statement>
+
+<statement> ::= <assign> | <exit> | <out>
+
+<assign> ::= <identifier> ":" <expression>
+
+<exit> ::= "exit" <expression>
+
+<out> ::= "out" <expression>
+
+<expression> ::= <byte> | <unary> | <binary> | <group>
+
+<group> ::= "(" <expression> ")"
+
+<unary> ::= "!" <expression>
+
+<binary> ::= <expression> <binary-operator> <expression>
+
+<binary-operator> ::= "+" | "-" | "*" | "=" | "<" | ">"
+
+<byte> ::= <number>*
+
+<number> ::= "0" | "1" | "2" | ...
+ 
+<identifier> ::= <letter> <character>*
+
+<character> ::= <letter> | <number>
+
+<letter> ::= "a" | "b" | "c" | ... | "A" | "B" | "C" | ...
+
