@@ -7,7 +7,7 @@
 #include "generated/token_to_keyword_map.h"
 
 // Converts a source file into lexical tokens.
-void lex_source(const char* src, Token* tokens) {
+void lex(const char* src, Token* tokens) {
 	printf("\nStarting lexical analysis...\n");
 
 	uint32_t src_index = 0;

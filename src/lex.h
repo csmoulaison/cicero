@@ -24,7 +24,7 @@ struct {
 	Token token;
 } typedef LexTokenResult;
 
-void lex_source(const char* src, Token* tokens);
+void lex(const char* src, Token* tokens);
 // Added to lex_procedures array of functions and dynamically dispatched.
 static LexTokenResult lex_statement_end(const char* src, uint32_t src_index);
 static LexTokenResult lex_keyword(const char* src, uint32_t src_index);

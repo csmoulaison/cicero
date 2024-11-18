@@ -1,43 +1,39 @@
 #include "parse.h"
 #include <stdlib.h>
-#include "asm.h"
 
-void parse_program(const Token* tokens) {
+#define PRIORITY_MULTIPLY 2
+#define PRIORITY_ADD 1
+#define PRIORITY_SUB 0
+
+void parse_and_compile(Token* tokens) {
 	printf("\nParsing and emitting nasm...\n");
 
-	FILE* nasm;
-	nasm = fopen(ASM_PATH, "w");
+	ParseContext context;
+	context.tokens = tokens;
+	context.token_index = 0;
+	context.out_file = fopen(ASM_PATH, "w");
 
-	fprintf(nasm, "global _start\n_start:\n");
+	fprintf(context.out_file, "global _start\n_start:\n");
 
-	uint32_t token_index = 0;
-	while(tokens[token_index].type != TOKEN_PROGRAM_END) {
-		parse_statement(tokens, &token_index, nasm);
+	while(peek(&context)->type != TOKEN_PROGRAM_END) {
+		parse_statement(&context);
 	}
 
-	fclose(nasm);
-
+	fclose(context.out_file);
 	printf("Parsing complete.\n");
 }
 
-void parse_statement(const Token* tokens, uint32_t* token_index, FILE* nasm) {
-	*token_index += 1;
-	switch(tokens[*token_index - 1].type) {
+static void parse_statement(ParseContext* context) {
+	switch(consume(context)->type) {
 	case TOKEN_EXIT:
-		parse_exit(tokens, token_index, nasm);
+		parse_exit(context);
 		break;
 	case TOKEN_ASSIGN:
 		// TODO: parse assign statement
+		//parse_assign(context);
+		// break
 		printf("Error: Expected exit statement, got assign.\n");
 		exit(1);
-		parse_assign(tokens, token_index, nasm);
-		break;
-	case TOKEN_OUT:
-		// TODO: parse out statement
-		printf("Error: Expected exit statement, got out token.\n");
-		exit(1);
-		parse_out(tokens, token_index, nasm);
-		break;
 	default:
 		printf("Error: Expected exit statement, got nothing.\n");
 		exit(1);
@@ -45,53 +41,60 @@ void parse_statement(const Token* tokens, uint32_t* token_index, FILE* nasm) {
 	}
 }
 
-void parse_exit(const Token* tokens, uint32_t* token_index, FILE* nasm) {
-	Expression expr = parse_expression(tokens, token_index, nasm);
-	if(expr.type == EXPR_BYTE) {
-		if(tokens[*token_index].type != TOKEN_STATEMENT_END) {
+static void parse_exit(ParseContext* context) {
+	Expression expression = parse_expression(context, 0);
+
+	if(expression.type == EXPR_BYTE) {
+		Token* token = consume(context);
+		if(token->type != TOKEN_STATEMENT_END) {
 			printf("Error: Expected statement end after exit command.\n");
+			exit(1);
 		}
-		*token_index += 1;
-		fprintf(nasm, "mov rdi, %u\n", expr.value.byte);
-		fprintf(nasm, "mov rax, 60\n");
-		fprintf(nasm, "syscall\n");
+
+		fprintf(context->out_file, "mov rdi, %u\n", expression.value.byte);
+		fprintf(context->out_file, "mov rax, 60\n");
+		fprintf(context->out_file, "syscall\n");
 	} else {
 		printf("Error: Expected byte expression when parsing exit.\n");
 		exit(1);
 	}
 }
 
-void parse_assign(const Token* tokens, uint32_t* token_index, FILE* nasm) {
-	// TODO: implement parse_assign
-}
+static Expression parse_expression(ParseContext* context, uint8_t priority) {
+	Token* token = consume(context);
+	if(token->type == TOKEN_BYTE_LITERAL) {
+		Expression left = (Expression){EXPR_BYTE, token->value.byte};
 
-void parse_out(const Token* tokens, uint32_t* token_index, FILE* nasm) {
-	// TODO: implement parse_out
-}
-
-Expression parse_expression(const Token* tokens, uint32_t* token_index, FILE* nasm) {
-	if(tokens[*token_index].type == TOKEN_BYTE_LITERAL) {
-		*token_index += 1;
-
-		Expression left = (Expression){EXPR_BYTE, tokens[*token_index - 1].value.byte};
-		if(tokens[*token_index].type == TOKEN_ADD) {
-			*token_index += 1;
-			Expression right = parse_expression(tokens, token_index, nasm);
+		if(peek(context)->type == TOKEN_ADD) {
+			skip(context);
+			Expression right = parse_expression(context, PRIORITY_ADD);
 
 			if(right.type != EXPR_BYTE) {
 				printf("Error: Expected right hand expression to resolve to a byte literal.\n");
 				exit(1);
 			}
 
-			Expression res = (Expression){EXPR_BYTE, left.value.byte + right.value.byte};
-			return res;
-		} else {
-			return left;
+			left.value.byte = left.value.byte + right.value.byte;
+			printf("Adde\n");
 		}
-		
+
+		return left;
 	} else {
 		printf("Error: Expected byte literal when parsing expression.\n");
 		exit(1);
 	}
-	
+}
+
+static Token* peek(ParseContext* context) {
+	return &context->tokens[context->token_index];
+}
+
+static Token* consume(ParseContext* context) {
+	Token* token = peek(context);
+	context->token_index++;
+	return token;
+}
+
+void skip(ParseContext* context) {
+	context->token_index++;
 }

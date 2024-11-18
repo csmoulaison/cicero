@@ -13,9 +13,9 @@
 #define OBJECT_PATH "program.o"
 #define EXE_PATH "program"
 
-// This isn't actually very useful right now, but it will be if we need to
-// implement a double pass. For now, I'm not too worried about the additional
-// code complexity unnecessarily added for this.
+// This isn't very useful right now, but it will be if we need to implement a
+// double pass. For now, I'm not too worried about the additional code
+// complexity unnecessarily added for this.
 enum ExpressionType {
 	EXPR_BYTE,
 	EXPR_BINARY,
@@ -30,10 +30,20 @@ struct {
 	} value;
 } typedef Expression;
 
-// Parses and compiles tokens in a single pass, outputting a final executable
-void parse_program(const Token* tokens);
-void parse_statement(const Token* tokens, uint32_t* token_index, FILE* nasm);
-void parse_exit(const Token* tokens, uint32_t* token_index, FILE* nasm);
-void parse_assign(const Token* tokens, uint32_t* token_index, FILE* nasm);
-void parse_out(const Token* tokens, uint32_t* token_index, FILE* nasm);
-Expression parse_expression(const Token* tokens, uint32_t* token_index, FILE* nasm);
+struct {
+	Token* tokens;
+	uint32_t token_index;
+	FILE* out_file;
+} typedef ParseContext;
+
+void parse_and_compile(Token* tokens);
+// Top level parsing
+static void parse_statement(ParseContext* context);
+static void parse_exit(ParseContext* context);
+// static void parse_assign(ParseContext* context);
+// Expressions
+static Expression parse_expression(ParseContext* context, uint8_t priority);
+// Helpers
+static Token* peek(ParseContext* context);
+static Token* consume(ParseContext* context);
+void skip(ParseContext* context);

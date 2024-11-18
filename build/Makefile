@@ -129,30 +129,6 @@ cicero/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/build
 .PHONY : cicero/fast
 
-home/csmoulaison/repos/cicero/src/asm.o: home/csmoulaison/repos/cicero/src/asm.c.o
-.PHONY : home/csmoulaison/repos/cicero/src/asm.o
-
-# target to build an object file
-home/csmoulaison/repos/cicero/src/asm.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/asm.c.o
-.PHONY : home/csmoulaison/repos/cicero/src/asm.c.o
-
-home/csmoulaison/repos/cicero/src/asm.i: home/csmoulaison/repos/cicero/src/asm.c.i
-.PHONY : home/csmoulaison/repos/cicero/src/asm.i
-
-# target to preprocess a source file
-home/csmoulaison/repos/cicero/src/asm.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/asm.c.i
-.PHONY : home/csmoulaison/repos/cicero/src/asm.c.i
-
-home/csmoulaison/repos/cicero/src/asm.s: home/csmoulaison/repos/cicero/src/asm.c.s
-.PHONY : home/csmoulaison/repos/cicero/src/asm.s
-
-# target to generate assembly for a file
-home/csmoulaison/repos/cicero/src/asm.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/cicero.dir/build.make CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/asm.c.s
-.PHONY : home/csmoulaison/repos/cicero/src/asm.c.s
-
 home/csmoulaison/repos/cicero/src/file.o: home/csmoulaison/repos/cicero/src/file.c.o
 .PHONY : home/csmoulaison/repos/cicero/src/file.o
 
@@ -258,9 +234,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... cicero"
-	@echo "... home/csmoulaison/repos/cicero/src/asm.o"
-	@echo "... home/csmoulaison/repos/cicero/src/asm.i"
-	@echo "... home/csmoulaison/repos/cicero/src/asm.s"
 	@echo "... home/csmoulaison/repos/cicero/src/file.o"
 	@echo "... home/csmoulaison/repos/cicero/src/file.i"
 	@echo "... home/csmoulaison/repos/cicero/src/file.s"

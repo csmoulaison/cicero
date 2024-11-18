@@ -34,9 +34,9 @@ int main(int argc, const char** argv) {
 
 	// Lexical analysis
 	Token tokens[TOKENS_MAX];
-	lex_source(src, tokens);
+	lex(src, tokens);
 
-	parse_program(tokens);
+	parse_and_compile(tokens);
 
 	// Assemble
 	printf("\nAssembling to executable...\n");
