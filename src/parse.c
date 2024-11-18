@@ -75,7 +75,6 @@ static Expression parse_expression(ParseContext* context, uint8_t priority) {
 			}
 
 			left.value.byte = left.value.byte + right.value.byte;
-			printf("Adde\n");
 		}
 
 		return left;
