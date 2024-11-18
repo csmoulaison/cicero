@@ -1,9 +1,9 @@
 #include "parse.h"
 #include <stdlib.h>
 
-#define PRIORITY_MULTIPLY 2
-#define PRIORITY_ADD 1
-#define PRIORITY_SUB 0
+#define PRIORITY_MULTIPLY 4
+#define PRIORITY_ADD 3
+#define PRIORITY_SUB 2
 
 void parse_and_compile(Token* tokens) {
 	printf("\nParsing and emitting nasm...\n");
@@ -42,7 +42,7 @@ static void parse_statement(ParseContext* context) {
 }
 
 static void parse_exit(ParseContext* context) {
-	Expression expression = parse_expression(context, 0);
+	Expression expression = parse_expression(context, 1);
 
 	if(expression.type == EXPR_BYTE) {
 		Token* token = consume(context);
@@ -60,21 +60,34 @@ static void parse_exit(ParseContext* context) {
 	}
 }
 
-static Expression parse_expression(ParseContext* context, uint8_t priority) {
-	Token* token = consume(context);
-	if(token->type == TOKEN_BYTE_LITERAL) {
-		Expression left = (Expression){EXPR_BYTE, token->value.byte};
+static Expression parse_expression(ParseContext* context, uint8_t precedence) {
+	Token* left_token = consume(context);
+	if(left_token->type == TOKEN_BYTE_LITERAL) {
+		Expression left = (Expression){EXPR_BYTE, left_token->value.byte};
 
-		if(peek(context)->type == TOKEN_ADD) {
-			skip(context);
+		while(precedence < peek_precedence(context)) {
+			Token* right_token = consume(context);
+
 			Expression right = parse_expression(context, PRIORITY_ADD);
-
 			if(right.type != EXPR_BYTE) {
 				printf("Error: Expected right hand expression to resolve to a byte literal.\n");
 				exit(1);
 			}
 
-			left.value.byte = left.value.byte + right.value.byte;
+			switch(right_token->type) {
+			case TOKEN_ADD:
+				left.value.byte = left.value.byte + right.value.byte;
+				break;
+			case TOKEN_SUB:
+				left.value.byte = left.value.byte - right.value.byte;
+				break;
+			case TOKEN_MULTIPLY:
+				left.value.byte = left.value.byte * right.value.byte;
+				break;
+			default:
+				printf("After peeking priority, stil got an invalid token. What's wrong?\n");	
+				exit(1);
+			}
 		}
 
 		return left;
@@ -94,6 +107,16 @@ static Token* consume(ParseContext* context) {
 	return token;
 }
 
-void skip(ParseContext* context) {
-	context->token_index++;
+uint8_t peek_precedence(ParseContext* context) {
+	switch(peek(context)->type) {
+	case TOKEN_ADD:
+		return PRIORITY_ADD;
+	case TOKEN_SUB:
+		return PRIORITY_SUB;
+	case TOKEN_MULTIPLY:
+		return PRIORITY_MULTIPLY;
+	default:
+		break;
+	}
+	return 0;
 }

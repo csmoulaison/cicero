@@ -42,8 +42,9 @@ static void parse_statement(ParseContext* context);
 static void parse_exit(ParseContext* context);
 // static void parse_assign(ParseContext* context);
 // Expressions
-static Expression parse_expression(ParseContext* context, uint8_t priority);
+static Expression parse_expression(ParseContext* context, uint8_t precedence);
 // Helpers
 static Token* peek(ParseContext* context);
 static Token* consume(ParseContext* context);
 void skip(ParseContext* context);
+uint8_t peek_precedence(ParseContext* context);
