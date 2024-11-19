@@ -160,7 +160,7 @@ static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 
 static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 	LexTokenResult result;
-	result.token.type = TOKEN_BYTE_LITERAL;
+	result.token.type = TOKEN_WORD_LITERAL;
 	result.abort = false;
 
 	if(!isdigit(src[src_index])) {
@@ -168,15 +168,15 @@ static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 		return result;
 	}
 
-	// 5 is the maximum characters because byte literals can only be 8 bit ints
-	// in range [0..255] and the string is null terminated.
-	char buffer[5];
+	// 5 is the maximum characters because word literals can only be 64 bit ints
+	// which is 20 digits long and the string is null terminated.
+	char buffer[22];
 	buffer[0] = src[src_index];
 
 	uint8_t i = 1;
 	while(isdigit(src[src_index + i])) {
-		if(i >= 3) {
-			printf("Error: More than 3 digits in byte literal at index %i. Byte literals can only be in range [0..255].\n", src_index);
+		if(i >= 20) {
+			printf("Error: More than 20 digits in word literal at index %i. Word literals can only be in 64-bit range.\n", src_index);
 			result.abort = true;
 			return result;
 		}
@@ -184,19 +184,13 @@ static LexTokenResult lex_byte_literal(const char* src, uint32_t src_index) {
 		buffer[i] = src[src_index + i];
 		i++;
 	}
-
 	buffer[i] = '\0';
 
-	uint64_t i64_representation = atoi(buffer);
-	if(i64_representation > 255) {
-		printf("Error: Byte literal %i at index %i larger than the 8 bit limit of 255.\n", i64_representation, src_index);
-		result.abort = true;
-		return result;
-	}
+	uint64_t word = atoi(buffer);
 
 	result.success = true;
 	result.chars_read = strlen(buffer);
-	result.token.value.byte = i64_representation;
+	result.token.value.word = word;
 	return result;
 }
 

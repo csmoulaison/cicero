@@ -21,7 +21,7 @@ enum TokenType {
 	TOKEN_LESS_THAN, // never will there be a less than or equals. unnecessary!
 	TOKEN_GREATER_THAN,
 	// Literals
-	TOKEN_BYTE_LITERAL,
+	TOKEN_WORD_LITERAL,
 	// Special
 	TOKEN_IDENTIFIER,
 	TOKEN_STATEMENT_END,

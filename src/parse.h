@@ -11,7 +11,7 @@
 // double pass. For now, I'm not too worried about the additional code
 // complexity unnecessarily added for this.
 enum ExpressionType {
-	EXPR_BYTE,
+	EXPR_WORD,
 	EXPR_BINARY,
 	EXPR_UNARY,
 	EXPR_GROUP
@@ -20,7 +20,7 @@ enum ExpressionType {
 struct {
 	enum ExpressionType type;
 	union {
-		uint8_t byte;
+		uint64_t word;
 	} value;
 } typedef Expression;
 

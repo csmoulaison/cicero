@@ -44,45 +44,45 @@ static void parse_statement(ParseContext* context) {
 static void parse_exit(ParseContext* context) {
 	Expression expression = parse_expression(context, 1);
 
-	if(expression.type == EXPR_BYTE) {
+	if(expression.type == EXPR_WORD) {
 		Token* token = consume(context);
 		if(token->type != TOKEN_STATEMENT_END) {
 			printf("Error: Expected statement end after exit command.\n");
 			exit(1);
 		}
 
-		fprintf(context->out_file, "mov rdi, %u\n", expression.value.byte);
+		fprintf(context->out_file, "mov rdi, %u\n", expression.value.word);
 		fprintf(context->out_file, "mov rax, 60\n");
 		fprintf(context->out_file, "syscall\n");
 	} else {
-		printf("Error: Expected byte expression when parsing exit.\n");
+		printf("Error: Expected word expression when parsing exit.\n");
 		exit(1);
 	}
 }
 
 static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 	Token* left_token = consume(context);
-	if(left_token->type == TOKEN_BYTE_LITERAL) {
-		Expression left = (Expression){EXPR_BYTE, left_token->value.byte};
+	if(left_token->type == TOKEN_WORD_LITERAL) {
+		Expression left = (Expression){EXPR_WORD, left_token->value.word};
 
 		while(precedence < peek_precedence(context)) {
 			Token* right_token = consume(context);
 
 			Expression right = parse_expression(context, PRIORITY_ADD);
-			if(right.type != EXPR_BYTE) {
-				printf("Error: Expected right hand expression to resolve to a byte literal.\n");
+			if(right.type != EXPR_WORD) {
+				printf("Error: Expected right hand expression to resolve to a word literal.\n");
 				exit(1);
 			}
 
 			switch(right_token->type) {
 			case TOKEN_ADD:
-				left.value.byte = left.value.byte + right.value.byte;
+				left.value.word = left.value.word + right.value.word;
 				break;
 			case TOKEN_SUB:
-				left.value.byte = left.value.byte - right.value.byte;
+				left.value.word = left.value.word - right.value.word;
 				break;
 			case TOKEN_MULTIPLY:
-				left.value.byte = left.value.byte * right.value.byte;
+				left.value.word = left.value.word * right.value.word;
 				break;
 			default:
 				printf("After peeking priority, stil got an invalid token. What's wrong?\n");	
@@ -92,7 +92,7 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 
 		return left;
 	} else {
-		printf("Error: Expected byte literal when parsing expression.\n");
+		printf("Error: Expected word literal when parsing expression.\n");
 		exit(1);
 	}
 }

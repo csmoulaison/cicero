@@ -6,7 +6,7 @@
 struct {
 	enum TokenType type;
 	union {
-		uint8_t byte;
+		uint64_t word;
 		// + 1 because it's a null terminated string
 		char string[IDENTIFIER_MAX_LEN + 1];
 	} value;
