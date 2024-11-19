@@ -6,9 +6,7 @@
 #define SRC_MAX 8192
 
 // Agenda
-// - Parse arithmetic operations with byte literals
-// ---
-// - Store (print) variables
+// - Global variables
 // - Arithmetic on variables
 // ---
 // - Marks and jumps
@@ -16,8 +14,6 @@
 // - Conditional jumps
 // ---
 // - Any more operators?
-// ---
-// - Make a toy project (calculator? idk, something that only uses numbers
 
 int main(int argc, const char** argv) {
 	// Error check: wrong number of arguments

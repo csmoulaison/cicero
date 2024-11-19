@@ -1,9 +1,3 @@
-// A recursive descent parser is one which just implements the formal grammar
-// using imperative code. the tree of function calls matches the tree specified
-// by the formal grammer, and the resultant abstract syntax tree.
-//
-// This is simple.
-
 #pragma once
 #include <stdio.h>
 #include <stdint.h>
@@ -43,7 +37,7 @@ static void parse_exit(ParseContext* context);
 // static void parse_assign(ParseContext* context);
 // Expressions
 static Expression parse_expression(ParseContext* context, uint8_t precedence);
-// Helpers
+// Helper functions
 static Token* peek(ParseContext* context);
 static Token* consume(ParseContext* context);
 void skip(ParseContext* context);
