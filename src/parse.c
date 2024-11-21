@@ -1,9 +1,12 @@
 #include "parse.h"
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 #define PRIORITY_MULTIPLY 4
 #define PRIORITY_ADD 3
 #define PRIORITY_SUB 2
+#define BYTE_ALIGNMENT 8
 
 void parse_and_compile(Token* tokens) {
 	printf("\nParsing and emitting nasm...\n");
@@ -12,11 +15,19 @@ void parse_and_compile(Token* tokens) {
 	context.tokens = tokens;
 	context.token_index = 0;
 	context.out_file = fopen(ASM_PATH, "w");
+	context.vars_len = 0;
 
-	fprintf(context.out_file, "global _start\n_start:\n");
+	fprintf(context.out_file, "global _start\n");
+	fprintf(context.out_file, "_start:\n");
+	fprintf(context.out_file, "push rbp\n");
+	fprintf(context.out_file, "mov rbp, rsp\n");
 
 	while(peek(&context)->type != TOKEN_PROGRAM_END) {
 		parse_statement(&context);
+		/* TODO: hmm....
+		if(peek(&context)->type == TOKEN_STATEMENT_END) {
+			context.token_index++;
+		}*/
 	}
 
 	fclose(context.out_file);
@@ -24,18 +35,23 @@ void parse_and_compile(Token* tokens) {
 }
 
 static void parse_statement(ParseContext* context) {
-	switch(consume(context)->type) {
+	Token* token = consume(context);
+	switch(token->type) {
 	case TOKEN_EXIT:
 		parse_exit(context);
 		break;
-	case TOKEN_ASSIGN:
-		// TODO: parse assign statement
-		//parse_assign(context);
-		// break
-		printf("Error: Expected exit statement, got assign.\n");
-		exit(1);
+	case TOKEN_WORD:
+		parse_word_declaration(context);
+		break;
+	case TOKEN_IDENTIFIER:
+		if(consume(context)->type != TOKEN_ASSIGN) {
+			printf("Error: Expected assignemnt operator after identifier %s.\n", token->value.identifier);
+			exit(1);
+		}
+		parse_word_assignment(context, token->value.identifier);
+		break;
 	default:
-		printf("Error: Expected exit statement, got nothing.\n");
+		printf("Error: Expected statement, got %i.\n", token->type);
 		exit(1);
 		break;
 	}
@@ -57,6 +73,68 @@ static void parse_exit(ParseContext* context) {
 	} else {
 		printf("Error: Expected word expression when parsing exit.\n");
 		exit(1);
+	}
+}
+
+static void parse_word_declaration(ParseContext* context) {
+	Token* word_token = consume(context);
+	if(word_token->type != TOKEN_IDENTIFIER) {
+		printf("Error: Expected identifier in word declaration.\n");
+		exit(1);
+	}
+
+	for(uint64_t var_index = 0; var_index < context->vars_len; var_index++) {
+		if(strcmp(context->vars[var_index].identifier, word_token->value.identifier) == 0) {
+			printf("Error: Identifier %s already declared.\n", word_token->value.identifier);
+			exit(1);
+		}
+	}
+
+	context->vars[context->vars_len].offset = (context->vars_len + 1) * -BYTE_ALIGNMENT;
+	memcpy(context->vars[context->vars_len].identifier, word_token->value.identifier, IDENTIFIER_MAX_LEN);
+	context->vars_len++;
+
+	fprintf(context->out_file, "sub rsp, %i\n", BYTE_ALIGNMENT);
+
+	Token* next_token = consume(context);
+	if(next_token->type == TOKEN_ASSIGN) {
+		parse_word_assignment(context, word_token->value.identifier);
+	} else if(next_token->type != TOKEN_STATEMENT_END) {
+		printf("Error: Expected statement end or assignment after word declaration %s.\n", word_token->value.identifier);
+		exit(1);
+	}
+}
+
+static void parse_word_assignment(ParseContext* context, const char* identifier) {
+	int32_t offset;
+	bool identifier_found = false;
+
+	for(uint64_t var_index = 0; var_index < context->vars_len; var_index++) {
+		if(strcmp(context->vars[var_index].identifier, identifier) == 0) {
+			identifier_found = true;
+			offset = context->vars[var_index].offset;
+			break;
+		}
+	}
+
+	if(!identifier_found) {
+		printf("Error: Identifier %s doesn't exist, but you are trying to assign to it.\n", identifier);
+		exit(1);
+	}
+
+	Token* value_token = consume(context);
+
+	if(value_token->type != TOKEN_WORD_LITERAL) {
+		printf("Error: Expected a word literal after assignment operator for identifier %s.\n", identifier);
+		exit(1);
+	}
+
+	printf("offset %i\n", offset);
+	fprintf(context->out_file, "mov qword [rbp%i], %i\n", offset, value_token->value.word);
+
+	Token* statement_end = consume(context);
+	if(statement_end->type != TOKEN_STATEMENT_END) {
+		printf("Error: Expected statement end after word assignment %s.\n", identifier);
 	}
 }
 

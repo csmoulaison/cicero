@@ -206,7 +206,7 @@ static LexTokenResult lex_identifier(const char* src, uint32_t src_index) {
 	}
 
 	// + 1 because the identifier is null terminated
-	char* buffer = result.token.value.string;
+	char* buffer = result.token.value.identifier;
 	buffer[0] = src[src_index];
 
 	uint8_t i = 1;

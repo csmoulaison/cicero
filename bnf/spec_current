@@ -1,14 +1,14 @@
 <program> ::= <statement>
 
-<statement> ::= <assign> | <exit> | <out>
+<statement> ::= <declaration> | <assignment> | <exit>
 
-<assign> ::= <identifier> ":" <expression>
+<declaration> ::= "word" <identifier> | "word" <assignment>
+
+<assignment> ::= <identifier> ":" <expression>
 
 <exit> ::= "exit" <expression>
 
-<out> ::= "out" <expression>
-
-<expression> ::= <byte> | <unary> | <binary> | <group>
+<expression> ::= <byte> | <binary> | <group>
 
 <group> ::= "(" <expression> ")"
 

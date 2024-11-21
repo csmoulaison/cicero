@@ -1,7 +1,7 @@
 // Still need to generate.
 #pragma once
 
-#define KEYWORD_LEN 5
+#define KEYWORD_LEN 6
 #define KEYWORD_STR_MAX 12
 
 // Coincides with the order of TokenType, allowing us to iterate
@@ -12,5 +12,6 @@ static char token_to_keyword_map[KEYWORD_LEN][KEYWORD_STR_MAX] = {
 	"mark",
 	"goto",
 	"if",
-	"out"
+	"out",
+	"word"
 };

@@ -37,4 +37,7 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: \
  /usr/include/bits/pthreadtypes-arch.h \
  /usr/include/bits/atomic_wide_counter.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-float.h
+ /usr/include/bits/stdlib-float.h /usr/include/string.h \
+ /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
+ /usr/include/strings.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h

@@ -8,6 +8,7 @@ enum TokenType {
 	TOKEN_JUMP,
 	TOKEN_IF,
 	TOKEN_OUT,
+	TOKEN_WORD,
 	// Arithmetic operators
 	TOKEN_ADD,
 	TOKEN_SUB,

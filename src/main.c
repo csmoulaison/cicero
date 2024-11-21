@@ -37,7 +37,7 @@ int main(int argc, const char** argv) {
 	// Assemble
 	printf("\nAssembling to executable...\n");
 	system("nasm -f elf64 program.asm -o program.o");
-	system("rm program.asm");
+	//system("rm program.asm");
 	system("ld -m elf_x86_64 program.o -o program");
 	system("rm program.o");
 	printf("Assembly complete.\n");

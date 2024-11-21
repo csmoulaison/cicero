@@ -1,0 +1,26 @@
+#insert "utils.ci"
+#define TARGET 4
+
+fn main : i8 argc i64 argv
+	i8 a = 2
+	i8 b = 2
+	i8 c
+
+	goto after_8 if c < 8
+	call add @c, a, b
+	out c
+
+	mark after_8
+	exit c
+
+	fn add : i64 res i8 a i8 b
+		@res = a + b
+		exit 0
+	end
+
+	fn sub : i64 res i8 a i8 b
+		@res = a + b
+		exit 0
+	end
+end
+
