@@ -28,7 +28,6 @@ void parse_and_compile(Token* tokens) {
 }
 
 static void parse_statement(ParseContext* context) {
-	printf("statement begin\n");
 	Token* token = consume(context);
 
 	switch(token->type) {
@@ -50,7 +49,6 @@ static void parse_statement(ParseContext* context) {
 		exit(1);
 		break;
 	}
-	printf("statement end\n");
 }
 
 static void parse_exit(ParseContext* context) {
@@ -207,7 +205,11 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 				fprintf(context->out_file, "mov %s, %s\n", op_registers[i], expr_asm_strings[i]);
 			}
 
-			fprintf(context->out_file, "add rax, rbx\n");
+			if(operator_token->type != TOKEN_MULTIPLY) {
+				fprintf(context->out_file, "%s rax, rbx\n", opcode);
+			} else {
+				fprintf(context->out_file, "mul rbx\n", opcode);
+			}
 			left.type = EXPR_RUNTIME;
 		}
 	}
