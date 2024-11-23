@@ -1,7 +1,7 @@
 #pragma once
 #include "generated/token_type.h"
 
-#define IDENTIFIER_MAX_LEN 64
+#define IDENTIFIER_MAX_LEN 32
 
 struct {
 	enum TokenType type;
@@ -10,3 +10,4 @@ struct {
 		char identifier[IDENTIFIER_MAX_LEN];
 	} value;
 } typedef Token;
+

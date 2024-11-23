@@ -32,6 +32,12 @@ int main(int argc, const char** argv) {
 	Token tokens[TOKENS_MAX];
 	lex(src, tokens);
 
+	int i = 0;
+	while(tokens[i].type != TOKEN_PROGRAM_END) {
+		printf("%i\n", tokens[i].type);
+		i++;
+	}
+
 	parse_and_compile(tokens);
 
 	// Assemble

@@ -3,10 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define PRIORITY_MULTIPLY 4
-#define PRIORITY_ADD 3
-#define PRIORITY_SUB 2
-#define BYTE_ALIGNMENT 8
+#define STACK_ALIGN 16
 
 void parse_and_compile(Token* tokens) {
 	printf("\nParsing and emitting nasm...\n");
@@ -24,10 +21,6 @@ void parse_and_compile(Token* tokens) {
 
 	while(peek(&context)->type != TOKEN_PROGRAM_END) {
 		parse_statement(&context);
-		/* TODO: hmm....
-		if(peek(&context)->type == TOKEN_STATEMENT_END) {
-			context.token_index++;
-		}*/
 	}
 
 	fclose(context.out_file);
@@ -35,48 +28,49 @@ void parse_and_compile(Token* tokens) {
 }
 
 static void parse_statement(ParseContext* context) {
+	printf("statement begin\n");
 	Token* token = consume(context);
+
 	switch(token->type) {
 	case TOKEN_EXIT:
 		parse_exit(context);
 		break;
 	case TOKEN_WORD:
-		parse_word_declaration(context);
+		parse_declaration(context);
 		break;
 	case TOKEN_IDENTIFIER:
 		if(consume(context)->type != TOKEN_ASSIGN) {
 			printf("Error: Expected assignemnt operator after identifier %s.\n", token->value.identifier);
 			exit(1);
 		}
-		parse_word_assignment(context, token->value.identifier);
+		parse_assignment(context, token->value.identifier);
 		break;
 	default:
 		printf("Error: Expected statement, got %i.\n", token->type);
 		exit(1);
 		break;
 	}
+	printf("statement end\n");
 }
 
 static void parse_exit(ParseContext* context) {
-	Expression expression = parse_expression(context, 1);
+	Expression exit_code = parse_expression(context, 1);
 
-	if(expression.type == EXPR_WORD) {
-		Token* token = consume(context);
-		if(token->type != TOKEN_STATEMENT_END) {
-			printf("Error: Expected statement end after exit command.\n");
-			exit(1);
-		}
+	char expr_ref_str[EXPR_REF_STR_MAX];
+	get_expression_ref_string(&exit_code, expr_ref_str);
 
-		fprintf(context->out_file, "mov rdi, %u\n", expression.value.word);
-		fprintf(context->out_file, "mov rax, 60\n");
-		fprintf(context->out_file, "syscall\n");
-	} else {
-		printf("Error: Expected word expression when parsing exit.\n");
+	Token* token = consume(context);
+	if(token->type != TOKEN_STATEMENT_END) {
+		printf("Error: Expected statement end after exit command. Got %i.\n", token->type);
 		exit(1);
 	}
+
+	fprintf(context->out_file, "mov rdi, %s\n", expr_ref_str);
+	fprintf(context->out_file, "mov rax, 60\n");
+	fprintf(context->out_file, "syscall\n");
 }
 
-static void parse_word_declaration(ParseContext* context) {
+static void parse_declaration(ParseContext* context) {
 	Token* word_token = consume(context);
 	if(word_token->type != TOKEN_IDENTIFIER) {
 		printf("Error: Expected identifier in word declaration.\n");
@@ -90,89 +84,135 @@ static void parse_word_declaration(ParseContext* context) {
 		}
 	}
 
-	context->vars[context->vars_len].offset = (context->vars_len + 1) * -BYTE_ALIGNMENT;
-	memcpy(context->vars[context->vars_len].identifier, word_token->value.identifier, IDENTIFIER_MAX_LEN);
+	context->vars[context->vars_len].offset = (context->vars_len + 1) * -STACK_ALIGN;
+	strcpy(context->vars[context->vars_len].identifier, word_token->value.identifier);
 	context->vars_len++;
 
-	fprintf(context->out_file, "sub rsp, %i\n", BYTE_ALIGNMENT);
+	fprintf(context->out_file, "sub rsp, %i\n", STACK_ALIGN);
 
 	Token* next_token = consume(context);
 	if(next_token->type == TOKEN_ASSIGN) {
-		parse_word_assignment(context, word_token->value.identifier);
+		parse_assignment(context, word_token->value.identifier);
 	} else if(next_token->type != TOKEN_STATEMENT_END) {
 		printf("Error: Expected statement end or assignment after word declaration %s.\n", word_token->value.identifier);
 		exit(1);
 	}
 }
 
-static void parse_word_assignment(ParseContext* context, const char* identifier) {
-	int32_t offset;
-	bool identifier_found = false;
+static void parse_assignment(ParseContext* context, const char* identifier) {
+	ParseVariable* variable = get_variable(context, identifier);
 
-	for(uint64_t var_index = 0; var_index < context->vars_len; var_index++) {
-		if(strcmp(context->vars[var_index].identifier, identifier) == 0) {
-			identifier_found = true;
-			offset = context->vars[var_index].offset;
-			break;
-		}
-	}
+	Expression value = parse_expression(context, 0);
 
-	if(!identifier_found) {
-		printf("Error: Identifier %s doesn't exist, but you are trying to assign to it.\n", identifier);
-		exit(1);
-	}
+	char ref_string[EXPR_REF_STR_MAX];
+	get_expression_ref_string(&value, ref_string);
 
-	Token* value_token = consume(context);
-
-	if(value_token->type != TOKEN_WORD_LITERAL) {
-		printf("Error: Expected a word literal after assignment operator for identifier %s.\n", identifier);
-		exit(1);
-	}
-
-	printf("offset %i\n", offset);
-	fprintf(context->out_file, "mov qword [rbp%i], %i\n", offset, value_token->value.word);
+	fprintf(context->out_file, "mov rax, %s\n", ref_string);
+	fprintf(context->out_file, "mov qword [rbp%i], rax\n", variable->offset);
 
 	Token* statement_end = consume(context);
 	if(statement_end->type != TOKEN_STATEMENT_END) {
 		printf("Error: Expected statement end after word assignment %s.\n", identifier);
+		exit(1);
 	}
 }
 
 static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 	Token* left_token = consume(context);
-	if(left_token->type == TOKEN_WORD_LITERAL) {
-		Expression left = (Expression){EXPR_WORD, left_token->value.word};
-
-		while(precedence < peek_precedence(context)) {
-			Token* right_token = consume(context);
-
-			Expression right = parse_expression(context, PRIORITY_ADD);
-			if(right.type != EXPR_WORD) {
-				printf("Error: Expected right hand expression to resolve to a word literal.\n");
-				exit(1);
-			}
-
-			switch(right_token->type) {
-			case TOKEN_ADD:
-				left.value.word = left.value.word + right.value.word;
-				break;
-			case TOKEN_SUB:
-				left.value.word = left.value.word - right.value.word;
-				break;
-			case TOKEN_MULTIPLY:
-				left.value.word = left.value.word * right.value.word;
-				break;
-			default:
-				printf("After peeking priority, stil got an invalid token. What's wrong?\n");	
-				exit(1);
-			}
-		}
-
-		return left;
-	} else {
-		printf("Error: Expected word literal when parsing expression.\n");
+	Expression left;
+	
+	switch(left_token->type) {
+	case TOKEN_WORD_LITERAL:
+		left.type = EXPR_LITERAL;
+		left.value.number = left_token->value.word;
+		break;
+	case TOKEN_IDENTIFIER:
+		left.type = EXPR_VARIABLE;
+		left.value.offset = get_variable(context, left_token->value.identifier)->offset;
+		break;
+	default:
+		printf("Error: Expected literal or identifier when parsing expression.\n");
 		exit(1);
 	}
+
+	for(;;) {
+		int right_precedence;
+		Token* operator_token = peek(context);
+
+		switch(operator_token->type) {
+		case TOKEN_MULTIPLY:
+			right_precedence = 4;
+			break;
+		case TOKEN_SUB:
+			right_precedence = 3;
+			break;
+		case TOKEN_ADD:
+			right_precedence = 2;
+			break;
+		default: // nothing more to parse!
+			right_precedence = 0;
+			break;
+		}
+
+		if(right_precedence <= precedence) {
+			// Don't recurse
+			break;
+		}
+
+		context->token_index++;
+		// Recurse
+		Expression right = parse_expression(context, right_precedence);
+
+		if(left.type == EXPR_LITERAL && right.type == EXPR_LITERAL) {
+			// Two compile-time-calculated expressions can operated on at compile time
+			switch(operator_token->type) {
+			case TOKEN_MULTIPLY:
+				left.value.number = left.value.number * right.value.number;
+				break;
+			case TOKEN_SUB:
+				left.value.number = left.value.number - right.value.number;
+				break;
+			case TOKEN_ADD:
+				left.value.number = left.value.number + right.value.number;
+				break;
+			default:
+				printf("E1 After peeking priority, stil got an invalid token. What's wrong?\n");	
+				exit(1);
+			}
+		} else {
+			// If one or more of the two expressions is not compile-time-calculated,
+			// the relevant calculations are written in asm and pushed on the stack.
+			char opcode[4];
+			switch(operator_token->type) {
+			case TOKEN_MULTIPLY:
+				strcpy(opcode, "mul");
+				break;
+			case TOKEN_SUB:
+				strcpy(opcode, "sub");
+				break;
+			case TOKEN_ADD:
+				strcpy(opcode, "add");
+				break;
+			default:
+				printf("E2 After peeking priority, stil got an invalid token. What's wrong?\n");	
+			}
+
+			Expression* expressions[2] = { &left, &right };
+			char op_registers[2][4] = {"rax", "rbx"};
+			char expr_asm_strings[2][EXPR_REF_STR_MAX];
+
+			for(uint8_t i = 0; i < 2; i++) {
+				Expression* expr = expressions[i];
+				get_expression_ref_string(expr, expr_asm_strings[i]);
+				fprintf(context->out_file, "mov %s, %s\n", op_registers[i], expr_asm_strings[i]);
+			}
+
+			fprintf(context->out_file, "add rax, rbx\n");
+			left.type = EXPR_RUNTIME;
+		}
+	}
+
+	return left;
 }
 
 static Token* peek(ParseContext* context) {
@@ -185,16 +225,30 @@ static Token* consume(ParseContext* context) {
 	return token;
 }
 
-uint8_t peek_precedence(ParseContext* context) {
-	switch(peek(context)->type) {
-	case TOKEN_ADD:
-		return PRIORITY_ADD;
-	case TOKEN_SUB:
-		return PRIORITY_SUB;
-	case TOKEN_MULTIPLY:
-		return PRIORITY_MULTIPLY;
-	default:
-		break;
+static ParseVariable* get_variable(ParseContext* context, const char* identifier) {
+	for(uint64_t var_index = 0; var_index < context->vars_len; var_index++) {
+		if(strcmp(context->vars[var_index].identifier, identifier) == 0) {
+			return &context->vars[var_index];
+		}
 	}
-	return 0;
+
+	printf("Error: Trying to parse variable %s, but it doesn't exist.\n", identifier);
+	exit(1);
+}
+
+static void get_expression_ref_string(Expression* expr, char out_ref_str[EXPR_REF_STR_MAX]) {
+	switch(expr->type) {
+	case EXPR_LITERAL:
+		sprintf(out_ref_str, "%i", expr->value.number);
+		break;
+	case EXPR_VARIABLE:
+		sprintf(out_ref_str, "[rbp%i]", expr->value.offset);
+		break;
+	case EXPR_RUNTIME:
+		sprintf(out_ref_str, "rax"); // depends where we put the result here
+		break;
+	default:
+		printf("Compiler Error: Not all expression types caught or type not set when constructing expression reference string.\n");
+		exit(1);
+	}
 }
