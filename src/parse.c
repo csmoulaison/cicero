@@ -14,14 +14,22 @@ void parse_and_compile(Token* tokens) {
 	context.out_file = fopen(ASM_PATH, "w");
 	context.vars_len = 0;
 
-	fprintf(context.out_file, "global _start\n");
-	fprintf(context.out_file, "_start:\n");
+	fprintf(context.out_file, "section .text\n");
+
+	fprintf(context.out_file, "extern printf\n");
+	fprintf(context.out_file, "extern exit\n");
+
+	fprintf(context.out_file, "global main\n");
+	fprintf(context.out_file, "main:\n");
 	fprintf(context.out_file, "push rbp\n");
 	fprintf(context.out_file, "mov rbp, rsp\n");
 
 	while(peek(&context)->type != TOKEN_PROGRAM_END) {
 		parse_statement(&context);
 	}
+
+	fprintf(context.out_file, "section .data\n");
+	fprintf(context.out_file, "fmt: db \"%%i\", 10, 0\n");
 
 	fclose(context.out_file);
 	printf("Parsing complete.\n");
@@ -33,6 +41,9 @@ static void parse_statement(ParseContext* context) {
 	switch(token->type) {
 	case TOKEN_EXIT:
 		parse_exit(context);
+		break;
+	case TOKEN_OUT:
+		parse_out(context);
 		break;
 	case TOKEN_WORD:
 		parse_declaration(context);
@@ -57,15 +68,32 @@ static void parse_exit(ParseContext* context) {
 	char expr_ref_str[EXPR_REF_STR_MAX];
 	get_expression_ref_string(&exit_code, expr_ref_str);
 
-	Token* token = consume(context);
-	if(token->type != TOKEN_STATEMENT_END) {
-		printf("Error: Expected statement end after exit command. Got %i.\n", token->type);
+	Token* next = consume(context);
+	if(next->type != TOKEN_STATEMENT_END) {
+		printf("Error: Expected statement end after exit command. Got %i.\n", next->type);
 		exit(1);
 	}
 
+	//fprintf(context->out_file, "push qword %s\n", expr_ref_str);
 	fprintf(context->out_file, "mov rdi, %s\n", expr_ref_str);
-	fprintf(context->out_file, "mov rax, 60\n");
-	fprintf(context->out_file, "syscall\n");
+	fprintf(context->out_file, "call exit\n");
+}
+
+static void parse_out(ParseContext* context) {
+	Expression out_value = parse_expression(context, 1);
+
+	char expr_ref_str[EXPR_REF_STR_MAX];
+	get_expression_ref_string(&out_value, expr_ref_str);
+
+	Token* next = consume(context);
+	if(next->type != TOKEN_STATEMENT_END) {
+		printf("Error: Expected statement end after print command. Got %i.\n", next->type);
+		exit(1);
+	}
+
+	fprintf(context->out_file, "mov rdi, fmt\n");
+	fprintf(context->out_file, "mov rsi, %s\n", expr_ref_str);
+	fprintf(context->out_file, "call printf\n");
 }
 
 static void parse_declaration(ParseContext* context) {

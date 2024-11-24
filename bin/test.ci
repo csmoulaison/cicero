@@ -1,3 +1,3 @@
-word hannah : 2
-word conner : 3 * hannah
-exit hannah * conner - 2 * 3 + 4 + hannah
+word apple : 8
+out apple + 3
+exit apple

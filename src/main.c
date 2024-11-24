@@ -6,9 +6,6 @@
 #define SRC_MAX 8192
 
 // Agenda
-// - Global variables
-// - Arithmetic on variables
-// ---
 // - Marks and jumps
 // ---
 // - Conditional jumps
@@ -36,10 +33,8 @@ int main(int argc, const char** argv) {
 
 	// Assemble
 	printf("\nAssembling to executable...\n");
-	system("nasm -f elf64 program.asm -o program.o");
-	//system("rm program.asm");
-	system("ld -m elf_x86_64 program.o -o program");
-	system("rm program.o");
+	system("nasm program.asm -f elf64 -o program.o");
+	system("gcc program.o -no-pie -o program");
 	printf("Assembly complete.\n");
 
 	printf("\nCompilation complete. Executable at \"%s\"\n", EXE_PATH);

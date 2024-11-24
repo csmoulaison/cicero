@@ -41,6 +41,7 @@ void parse_and_compile(Token* tokens);
 // Top level parsing
 static void parse_statement(ParseContext* context);
 static void parse_exit(ParseContext* context);
+static void parse_out(ParseContext* context);
 static void parse_declaration(ParseContext* context);
 static void parse_assignment(ParseContext* context, const char* identifier);
 // Expressions
