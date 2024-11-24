@@ -1,0 +1,7 @@
+word apple : 0
+mark begin
+print apple
+apple : apple + 1
+jump begin
+mark end
+exit 0

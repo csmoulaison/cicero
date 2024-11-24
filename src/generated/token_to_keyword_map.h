@@ -10,8 +10,8 @@
 static char token_to_keyword_map[KEYWORD_LEN][KEYWORD_STR_MAX] = {
 	"exit",
 	"mark",
-	"goto",
+	"jump",
 	"if",
-	"out",
+	"print",
 	"word"
 };

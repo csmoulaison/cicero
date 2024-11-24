@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "token.h"
 
 #define ASM_PATH "program.asm"
@@ -9,6 +10,7 @@
 #define EXPR_REF_STR_MAX 32
 
 #define VARS_MAX 256
+#define MARKS_MAX 256
 
 enum ExpressionType {
 	EXPR_LITERAL,
@@ -31,18 +33,34 @@ struct {
 } typedef ParseVariable;
 
 struct {
+	char identifier[IDENTIFIER_MAX_LEN];
+	bool mark_declared;
+} typedef ParseJump;
+
+struct {
+	FILE* out_file;
+
 	Token* tokens;
 	uint32_t token_index;
-	FILE* out_file;
+
 	ParseVariable vars[VARS_MAX];
 	uint32_t vars_len;
+
+	char marks[MARKS_MAX][IDENTIFIER_MAX_LEN];
+	uint32_t marks_len;
+
+	ParseJump jumps[MARKS_MAX];
+	uint32_t jumps_len;
 } typedef ParseContext;
 
 void parse_and_compile(Token* tokens);
 // Top level parsing
 static void parse_statement(ParseContext* context);
 static void parse_exit(ParseContext* context);
-static void parse_out(ParseContext* context);
+static void parse_print(ParseContext* context);
+static void parse_mark(ParseContext* context);
+static void parse_jump(ParseContext* context);
+static void parse_if(ParseContext* context);
 static void parse_declaration(ParseContext* context);
 static void parse_assignment(ParseContext* context, const char* identifier);
 // Expressions

@@ -20,6 +20,7 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: \
  /usr/include/stdint.h /usr/include/bits/wchar.h \
  /usr/include/bits/stdint-intn.h /usr/include/bits/stdint-uintn.h \
  /usr/include/bits/stdint-least.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h \
  /home/csmoulaison/repos/cicero/src/token.h \
  /home/csmoulaison/repos/cicero/src/generated/token_type.h \
  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
@@ -39,5 +40,4 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/bits/stdlib-float.h /usr/include/string.h \
  /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
- /usr/include/strings.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdbool.h
+ /usr/include/strings.h

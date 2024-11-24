@@ -1,7 +1,6 @@
 #include "parse.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 #define STACK_ALIGN 16
 
@@ -9,10 +8,14 @@ void parse_and_compile(Token* tokens) {
 	printf("\nParsing and emitting nasm...\n");
 
 	ParseContext context;
+	context.out_file = fopen(ASM_PATH, "w");
+
 	context.tokens = tokens;
 	context.token_index = 0;
-	context.out_file = fopen(ASM_PATH, "w");
+
 	context.vars_len = 0;
+	context.marks_len = 0;
+	context.jumps_len = 0;
 
 	fprintf(context.out_file, "section .text\n");
 
@@ -28,6 +31,13 @@ void parse_and_compile(Token* tokens) {
 		parse_statement(&context);
 	}
 
+	for(uint32_t jump_index = 0; jump_index < context.jumps_len; jump_index++) {
+		if(!context.jumps[jump_index].mark_declared) {
+			printf("Error: Jump identifier %s was never declared.\n", context.jumps[jump_index].identifier);
+			exit(1);
+		}
+	}
+
 	fprintf(context.out_file, "section .data\n");
 	fprintf(context.out_file, "fmt: db \"%%i\", 10, 0\n");
 
@@ -39,11 +49,20 @@ static void parse_statement(ParseContext* context) {
 	Token* token = consume(context);
 
 	switch(token->type) {
+	case TOKEN_MARK:
+		parse_mark(context);
+		break;
+	case TOKEN_JUMP:
+		parse_jump(context);
+		break;
+	case TOKEN_IF:
+		parse_if(context);
+		break;
 	case TOKEN_EXIT:
 		parse_exit(context);
 		break;
-	case TOKEN_OUT:
-		parse_out(context);
+	case TOKEN_PRINT:
+		parse_print(context);
 		break;
 	case TOKEN_WORD:
 		parse_declaration(context);
@@ -59,6 +78,52 @@ static void parse_statement(ParseContext* context) {
 	}
 }
 
+static void parse_mark(ParseContext* context) {
+	Token* mark_token = expect(context, TOKEN_IDENTIFIER, "After mark keyword.");
+	expect(context, TOKEN_STATEMENT_END, "During mark command.");
+
+	for(uint64_t mark_index = 0; mark_index < context->marks_len; mark_index++) {
+		if(strcmp(context->marks[mark_index], mark_token->value.identifier) == 0) {
+			printf("Error: Mark %s already declared.\n", mark_token->value.identifier);
+			exit(1);
+		}
+	}
+
+	for(uint64_t jump_index = 0; jump_index < context->jumps_len; jump_index++) {
+		if(strcmp(context->jumps[jump_index].identifier, mark_token->value.identifier) == 0) {
+			context->jumps[jump_index].mark_declared = true;
+			break;
+		}
+	}
+
+	strcpy(context->marks[context->marks_len], mark_token->value.identifier);
+	context->marks_len++;
+
+	fprintf(context->out_file, "%s:\n", mark_token->value.identifier);
+}
+
+static void parse_jump(ParseContext* context) {
+	Token* mark_token = expect(context, TOKEN_IDENTIFIER, "After jump keyword.");
+	expect(context, TOKEN_STATEMENT_END, "During jump command.");
+
+	ParseJump jump;
+	strcpy(jump.identifier, mark_token->value.identifier);
+	jump.mark_declared = false;
+
+	for(uint64_t mark_index = 0; mark_index < context->marks_len; mark_index++) {
+		if(strcmp(context->marks[mark_index], mark_token->value.identifier) == 0) {
+			jump.mark_declared = true;
+			break;
+		}
+	}
+
+	fprintf(context->out_file, "JMP %s\n", jump.identifier);
+}
+
+static void parse_if(ParseContext* context) {
+
+}
+
 static void parse_exit(ParseContext* context) {
 	Expression exit_code = parse_expression(context, 1);
 
@@ -68,7 +133,7 @@ static void parse_exit(ParseContext* context) {
 	fprintf(context->out_file, "call exit\n");
 }
 
-static void parse_out(ParseContext* context) {
+static void parse_print(ParseContext* context) {
 	Expression out_value = parse_expression(context, 1);
 
 	expect(context, TOKEN_STATEMENT_END, "After out command.");
@@ -83,7 +148,7 @@ static void parse_declaration(ParseContext* context) {
 
 	for(uint64_t var_index = 0; var_index < context->vars_len; var_index++) {
 		if(strcmp(context->vars[var_index].identifier, word_token->value.identifier) == 0) {
-			printf("Error: Identifier %s already declared.\n", word_token->value.identifier);
+			printf("Error: Variable %s already declared.\n", word_token->value.identifier);
 			exit(1);
 		}
 	}

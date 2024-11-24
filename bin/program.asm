@@ -6,21 +6,20 @@ main:
 push rbp
 mov rbp, rsp
 sub rsp, 16
-mov rax, 22
+mov rax, 0
 mov qword [rbp-16], rax
-sub rsp, 16
-mov rax, 2
-mov rbx, [rbp-16]
-mul rbx
-mov rax, rax
-mov rbx, 6
+begin:
+mov rdi, fmt
+mov rsi, [rbp-16]
+call printf
+mov rax, [rbp-16]
+mov rbx, 1
 add rax, rbx
 mov rax, rax
-mov qword [rbp-32], rax
-mov rdi, fmt
-mov rsi, [rbp-32]
-call printf
-mov rdi, [rbp-16]
+mov qword [rbp-16], rax
+JMP begin
+end:
+mov rdi, 0
 call exit
 section .data
 fmt: db "%i", 10, 0

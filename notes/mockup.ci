@@ -1,21 +1,37 @@
+~ Simple mockup. By the way, this is a comment.
+word a : 2 + 4
+word b : a + 2
+print a + b
+
+word c : 0
+
+mark begin_loop
+if (c < 10) goto end_loop
+c = c + 1
+out c
+goto begin_loop
+mark end_loop
+
+exit c
+
+~ Later mockup
 load "utils.ci"
 def TARGET 4
 
-[this is a comment]
 fn main : byte argc long argv
 	byte a : 2
 	byte b : 2
 	byte c
 
-	goto after_add if c < 8
+	if (c < 8) goto after_add
 	add &c, a, b
 	out c
 
 	mark after_add
 	exit c
 
-	[ Nested functions do not share a scope with their outer enclosure. Instead,
-	  the nesting means this function can only be used within the outer scope. ]
+	~ Nested functions do not share a scope with their outer enclosure. Instead,
+	~   the nesting means this function can only be used within the outer scope.
 	fn add : long res byte op1 byte op2
 		@res : a + b
 		@(res + byte * 2)

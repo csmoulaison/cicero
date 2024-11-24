@@ -111,7 +111,7 @@ static LexTokenResult lex_keyword(const char* src, uint32_t src_index) {
 		result.chars_read = src_index - initial_src_index;
 		result.token = (Token){token_map_index, 0};
 	}
-	
+
 	return result;
 }
 
