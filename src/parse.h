@@ -22,6 +22,7 @@ struct {
 		uint64_t number;
 		uint64_t offset;
 	} value;
+	char reference_string[EXPR_REF_STR_MAX];
 } typedef Expression;
 
 struct {
@@ -51,4 +52,4 @@ static Token* peek(ParseContext* context);
 static Token* consume(ParseContext* context);
 void skip(ParseContext* context);
 static ParseVariable* get_variable(ParseContext* context, const char* identifier);
-static void get_expression_ref_string(Expression* expr, char out_ref_str[EXPR_REF_STR_MAX]);
+static void populate_expression_ref_string(Expression* expr);

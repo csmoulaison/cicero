@@ -65,25 +65,18 @@ static void parse_statement(ParseContext* context) {
 static void parse_exit(ParseContext* context) {
 	Expression exit_code = parse_expression(context, 1);
 
-	char expr_ref_str[EXPR_REF_STR_MAX];
-	get_expression_ref_string(&exit_code, expr_ref_str);
-
 	Token* next = consume(context);
 	if(next->type != TOKEN_STATEMENT_END) {
 		printf("Error: Expected statement end after exit command. Got %i.\n", next->type);
 		exit(1);
 	}
 
-	//fprintf(context->out_file, "push qword %s\n", expr_ref_str);
-	fprintf(context->out_file, "mov rdi, %s\n", expr_ref_str);
+	fprintf(context->out_file, "mov rdi, %s\n", exit_code.reference_string);
 	fprintf(context->out_file, "call exit\n");
 }
 
 static void parse_out(ParseContext* context) {
 	Expression out_value = parse_expression(context, 1);
-
-	char expr_ref_str[EXPR_REF_STR_MAX];
-	get_expression_ref_string(&out_value, expr_ref_str);
 
 	Token* next = consume(context);
 	if(next->type != TOKEN_STATEMENT_END) {
@@ -92,7 +85,7 @@ static void parse_out(ParseContext* context) {
 	}
 
 	fprintf(context->out_file, "mov rdi, fmt\n");
-	fprintf(context->out_file, "mov rsi, %s\n", expr_ref_str);
+	fprintf(context->out_file, "mov rsi, %s\n", out_value.reference_string);
 	fprintf(context->out_file, "call printf\n");
 }
 
@@ -130,10 +123,7 @@ static void parse_assignment(ParseContext* context, const char* identifier) {
 
 	Expression value = parse_expression(context, 0);
 
-	char ref_string[EXPR_REF_STR_MAX];
-	get_expression_ref_string(&value, ref_string);
-
-	fprintf(context->out_file, "mov rax, %s\n", ref_string);
+	fprintf(context->out_file, "mov rax, %s\n", value.reference_string);
 	fprintf(context->out_file, "mov qword [rbp%i], rax\n", variable->offset);
 
 	Token* statement_end = consume(context);
@@ -223,25 +213,21 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 				printf("E2 After peeking priority, stil got an invalid token. What's wrong?\n");	
 			}
 
-			Expression* expressions[2] = { &left, &right };
-			char op_registers[2][4] = {"rax", "rbx"};
-			char expr_asm_strings[2][EXPR_REF_STR_MAX];
+			populate_expression_ref_string(&left);
+			fprintf(context->out_file, "mov rax, %s\n", left.reference_string);
+			fprintf(context->out_file, "mov rbx, %s\n", right.reference_string);
 
-			for(uint8_t i = 0; i < 2; i++) {
-				Expression* expr = expressions[i];
-				get_expression_ref_string(expr, expr_asm_strings[i]);
-				fprintf(context->out_file, "mov %s, %s\n", op_registers[i], expr_asm_strings[i]);
-			}
-
-			if(operator_token->type != TOKEN_MULTIPLY) {
-				fprintf(context->out_file, "%s rax, rbx\n", opcode);
-			} else {
+			if(operator_token->type == TOKEN_MULTIPLY) {
 				fprintf(context->out_file, "mul rbx\n", opcode);
+			} else {
+				fprintf(context->out_file, "%s rax, rbx\n", opcode);
 			}
+
 			left.type = EXPR_RUNTIME;
 		}
 	}
 
+	populate_expression_ref_string(&left);
 	return left;
 }
 
@@ -266,16 +252,16 @@ static ParseVariable* get_variable(ParseContext* context, const char* identifier
 	exit(1);
 }
 
-static void get_expression_ref_string(Expression* expr, char out_ref_str[EXPR_REF_STR_MAX]) {
+static void populate_expression_ref_string(Expression* expr) {
 	switch(expr->type) {
 	case EXPR_LITERAL:
-		sprintf(out_ref_str, "%i", expr->value.number);
+		sprintf(expr->reference_string, "%i", expr->value.number);
 		break;
 	case EXPR_VARIABLE:
-		sprintf(out_ref_str, "[rbp%i]", expr->value.offset);
+		sprintf(expr->reference_string, "[rbp%i]", expr->value.offset);
 		break;
 	case EXPR_RUNTIME:
-		sprintf(out_ref_str, "rax"); // depends where we put the result here
+		sprintf(expr->reference_string, "rax"); // depends where we put the result here
 		break;
 	default:
 		printf("Compiler Error: Not all expression types caught or type not set when constructing expression reference string.\n");
