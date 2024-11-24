@@ -49,14 +49,11 @@ static void parse_statement(ParseContext* context) {
 		parse_declaration(context);
 		break;
 	case TOKEN_IDENTIFIER:
-		if(consume(context)->type != TOKEN_ASSIGN) {
-			printf("Error: Expected assignemnt operator after identifier %s.\n", token->value.identifier);
-			exit(1);
-		}
+		expect(context, TOKEN_ASSIGN, "After identifier");
 		parse_assignment(context, token->value.identifier);
 		break;
 	default:
-		printf("Error: Expected statement, got %i.\n", token->type);
+		printf("Error: Expected a top level statement, got %i.\n", token->type);
 		exit(1);
 		break;
 	}
@@ -65,11 +62,7 @@ static void parse_statement(ParseContext* context) {
 static void parse_exit(ParseContext* context) {
 	Expression exit_code = parse_expression(context, 1);
 
-	Token* next = consume(context);
-	if(next->type != TOKEN_STATEMENT_END) {
-		printf("Error: Expected statement end after exit command. Got %i.\n", next->type);
-		exit(1);
-	}
+	expect(context, TOKEN_STATEMENT_END, "During exit command.");
 
 	fprintf(context->out_file, "mov rdi, %s\n", exit_code.reference_string);
 	fprintf(context->out_file, "call exit\n");
@@ -78,11 +71,7 @@ static void parse_exit(ParseContext* context) {
 static void parse_out(ParseContext* context) {
 	Expression out_value = parse_expression(context, 1);
 
-	Token* next = consume(context);
-	if(next->type != TOKEN_STATEMENT_END) {
-		printf("Error: Expected statement end after print command. Got %i.\n", next->type);
-		exit(1);
-	}
+	expect(context, TOKEN_STATEMENT_END, "After out command.");
 
 	fprintf(context->out_file, "mov rdi, fmt\n");
 	fprintf(context->out_file, "mov rsi, %s\n", out_value.reference_string);
@@ -90,11 +79,7 @@ static void parse_out(ParseContext* context) {
 }
 
 static void parse_declaration(ParseContext* context) {
-	Token* word_token = consume(context);
-	if(word_token->type != TOKEN_IDENTIFIER) {
-		printf("Error: Expected identifier in word declaration.\n");
-		exit(1);
-	}
+	Token* word_token = expect(context, TOKEN_IDENTIFIER, "In word declaration");
 
 	for(uint64_t var_index = 0; var_index < context->vars_len; var_index++) {
 		if(strcmp(context->vars[var_index].identifier, word_token->value.identifier) == 0) {
@@ -109,10 +94,10 @@ static void parse_declaration(ParseContext* context) {
 
 	fprintf(context->out_file, "sub rsp, %i\n", STACK_ALIGN);
 
-	Token* next_token = consume(context);
-	if(next_token->type == TOKEN_ASSIGN) {
+	Token* next = consume(context);
+	if(next->type == TOKEN_ASSIGN) {
 		parse_assignment(context, word_token->value.identifier);
-	} else if(next_token->type != TOKEN_STATEMENT_END) {
+	} else if(next->type != TOKEN_STATEMENT_END) {
 		printf("Error: Expected statement end or assignment after word declaration %s.\n", word_token->value.identifier);
 		exit(1);
 	}
@@ -126,11 +111,7 @@ static void parse_assignment(ParseContext* context, const char* identifier) {
 	fprintf(context->out_file, "mov rax, %s\n", value.reference_string);
 	fprintf(context->out_file, "mov qword [rbp%i], rax\n", variable->offset);
 
-	Token* statement_end = consume(context);
-	if(statement_end->type != TOKEN_STATEMENT_END) {
-		printf("Error: Expected statement end after word assignment %s.\n", identifier);
-		exit(1);
-	}
+	expect(context, TOKEN_STATEMENT_END, "After word assignment.");
 }
 
 static Expression parse_expression(ParseContext* context, uint8_t precedence) {
@@ -153,7 +134,7 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 
 	for(;;) {
 		int right_precedence;
-		Token* operator_token = peek(context);
+		Token* operator_token = consume(context);
 
 		switch(operator_token->type) {
 		case TOKEN_MULTIPLY:
@@ -172,10 +153,10 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 
 		if(right_precedence <= precedence) {
 			// Don't recurse
+			context->token_index--;
 			break;
 		}
 
-		context->token_index++;
 		// Recurse
 		Expression right = parse_expression(context, right_precedence);
 
@@ -241,6 +222,16 @@ static Token* consume(ParseContext* context) {
 	return token;
 }
 
+static Token* expect(ParseContext* context, enum TokenType expected_type, const char* info) {
+	Token* token = consume(context);
+	if(token->type != expected_type) {
+		printf("Error: Expected %i, got %i. %s\n", expected_type, token->type, info);
+		exit(1);
+	}
+
+	return token;
+}
+
 static ParseVariable* get_variable(ParseContext* context, const char* identifier) {
 	for(uint64_t var_index = 0; var_index < context->vars_len; var_index++) {
 		if(strcmp(context->vars[var_index].identifier, identifier) == 0) {
@@ -248,7 +239,7 @@ static ParseVariable* get_variable(ParseContext* context, const char* identifier
 		}
 	}
 
-	printf("Error: Trying to parse variable %s, but it doesn't exist.\n", identifier);
+	printf("Error: Trying to reference variable %s, but it doesn't exist.\n", identifier);
 	exit(1);
 }
 

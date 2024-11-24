@@ -50,6 +50,6 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence);
 // Helper functions
 static Token* peek(ParseContext* context);
 static Token* consume(ParseContext* context);
-void skip(ParseContext* context);
+static Token* expect(ParseContext* context, enum TokenType expected_type, const char* info);
 static ParseVariable* get_variable(ParseContext* context, const char* identifier);
 static void populate_expression_ref_string(Expression* expr);

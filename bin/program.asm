@@ -6,13 +6,19 @@ main:
 push rbp
 mov rbp, rsp
 sub rsp, 16
-mov rax, 8
+mov rax, 22
 mov qword [rbp-16], rax
-mov rax, [rbp-16]
-mov rbx, 3
+sub rsp, 16
+mov rax, 2
+mov rbx, [rbp-16]
+mul rbx
+mov rax, rax
+mov rbx, 6
 add rax, rbx
+mov rax, rax
+mov qword [rbp-32], rax
 mov rdi, fmt
-mov rsi, rax
+mov rsi, [rbp-32]
 call printf
 mov rdi, [rbp-16]
 call exit

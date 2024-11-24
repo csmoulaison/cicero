@@ -1,3 +1,5 @@
-word apple : 8
-out apple + 3
+word apple : 8 + 4 * 3 + 2
+word anchovie
+anchovie : 2 * apple + 3 * 2
+out anchovie
 exit apple
