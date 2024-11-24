@@ -43,8 +43,9 @@ Currently, a small number of features are implemented:
 Future features include (in rough order of planned implementation):
 - Conditional jumps
 - User input
-- Functions (eventually nested inside other functions to limit scope of callability)
 - Pointers
+- More contextual and uniform error messages
+- Functions (eventually nested inside other functions to limit scope of callability)
 - "define" statements for preprocessed string replacement
 - "include" statements to include other files
 - 8, 16, and 32 bit integer types
