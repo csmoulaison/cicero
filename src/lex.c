@@ -143,20 +143,32 @@ static LexTokenResult lex_operator(const char* src, uint32_t src_index) {
 	case '*':
 		result.token.type = TOKEN_MULTIPLY;
 		break;
+	case '/':
+		result.token.type = TOKEN_DIVIDE;
+		break;
+	case '%':
+		result.token.type = TOKEN_MODULO;
+		break;
 	case ':':
 		result.token.type = TOKEN_ASSIGN;
 		break;
-	case '!':
-		result.token.type = TOKEN_LOGICAL_NOT;
-		break;
 	case '=':
-		result.token.type = TOKEN_EQUALS;
+		result.token.type = TOKEN_EQUAL;
+		break;
+	case '!':
+		result.token.type = TOKEN_NOT_EQUAL;
 		break;
 	case '<':
 		result.token.type = TOKEN_LESS_THAN;
 		break;
 	case '>':
 		result.token.type = TOKEN_GREATER_THAN;
+		break;
+	case '(':
+		result.token.type = TOKEN_PAREN_OPEN;
+		break;
+	case ')':
+		result.token.type = TOKEN_PAREN_CLOSE;
 		break;
 	// Is not an operator
 	default:

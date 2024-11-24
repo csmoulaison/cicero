@@ -2,8 +2,8 @@ word apple
 apple : 0
 
 mark loop
-apple : apple + 1
 print apple
-jump loop
+apple : apple + 1
+if (apple < 10) jump loop
 
 exit 0

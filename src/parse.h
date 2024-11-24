@@ -43,6 +43,8 @@ struct {
 	Token* tokens;
 	uint32_t token_index;
 
+	uint32_t if_count;
+
 	ParseVariable vars[VARS_MAX];
 	uint32_t vars_len;
 

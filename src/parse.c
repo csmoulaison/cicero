@@ -3,25 +3,23 @@
 #include <string.h>
 
 #define STACK_ALIGN 16
+#define IF_LABEL "CICERO_IF_LABEL"
 
 void parse_and_compile(Token* tokens) {
 	printf("\nParsing and emitting nasm...\n");
 
 	ParseContext context;
 	context.out_file = fopen(ASM_PATH, "w");
-
 	context.tokens = tokens;
 	context.token_index = 0;
-
+	context.if_count = 0;
 	context.vars_len = 0;
 	context.marks_len = 0;
 	context.jumps_len = 0;
 
 	fprintf(context.out_file, "section .text\n");
-
 	fprintf(context.out_file, "extern printf\n");
 	fprintf(context.out_file, "extern exit\n");
-
 	fprintf(context.out_file, "global main\n");
 	fprintf(context.out_file, "main:\n");
 	fprintf(context.out_file, "push rbp\n");
@@ -72,7 +70,7 @@ static void parse_statement(ParseContext* context) {
 		parse_assignment(context, token->value.identifier);
 		break;
 	default:
-		printf("Error: Expected a top level statement, got %i.\n", token->type);
+		printf("Error: Expected a statement, got %i.\n", token->type);
 		exit(1);
 		break;
 	}
@@ -103,7 +101,7 @@ static void parse_mark(ParseContext* context) {
 }
 
 static void parse_jump(ParseContext* context) {
-	Token* mark_token = expect(context, TOKEN_IDENTIFIER, "After jump keyword.");
+	Token* mark_token = expect(context, TOKEN_IDENTIFIER, "After jump keyword");
 	expect(context, TOKEN_STATEMENT_END, "During jump command.");
 
 	ParseJump jump;
@@ -121,7 +119,40 @@ static void parse_jump(ParseContext* context) {
 }
 
 static void parse_if(ParseContext* context) {
+	expect(context, TOKEN_PAREN_OPEN, "After if keyword");
+	Expression left = parse_expression(context, 0);
+	Token* operator = consume(context);
+	Expression right = parse_expression(context, 0);
+	expect(context, TOKEN_PAREN_CLOSE, "After comparison parsed");
 
+	char jump_opcode[4];
+	switch(operator->type) {
+	case TOKEN_EQUAL:
+		strcpy(jump_opcode, "JNE");
+		break;
+	case TOKEN_NOT_EQUAL:
+		strcpy(jump_opcode, "JE");
+		break;
+	case TOKEN_GREATER_THAN:
+		strcpy(jump_opcode, "JL");
+		break;
+	case TOKEN_LESS_THAN:
+		strcpy(jump_opcode, "JG");
+		break;
+	default:
+		printf("Error: Expected comparison operator after expression. In conditional statement\n");
+		exit(1);
+	}
+
+	fprintf(context->out_file, "mov rax, %s\n", left.reference_string);
+	fprintf(context->out_file, "mov rbx, %s\n", right.reference_string);
+	fprintf(context->out_file, "cmp rax, rbx\n");
+	fprintf(context->out_file, "%s %s%i\n", jump_opcode, IF_LABEL, context->if_count);
+
+	parse_statement(context);
+
+	fprintf(context->out_file, "%s%i:\n", IF_LABEL, context->if_count);
+	context->if_count++;
 }
 
 static void parse_exit(ParseContext* context) {
@@ -290,7 +321,7 @@ static Token* consume(ParseContext* context) {
 static Token* expect(ParseContext* context, enum TokenType expected_type, const char* info) {
 	Token* token = consume(context);
 	if(token->type != expected_type) {
-		printf("Error: Expected %i, got %i. %s\n", expected_type, token->type, info);
+		printf("Error: Expected %i, got %i. %s.\n", expected_type, token->type, info);
 		exit(1);
 	}
 
