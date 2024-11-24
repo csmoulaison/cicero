@@ -17,6 +17,13 @@ void lex(const char* src, Token* tokens) {
 			printf("Error: Trying to lex another token, but we have already reached the token max. (%i)\n", TOKENS_MAX);
 			goto abort_lexical_analysis;
 		}
+
+		while(src[src_index] == '~') {
+			while(src[src_index] != '\n') {
+				src_index++;
+			}
+			src_index++;
+		}
 		
 		while(src[src_index] == ' ') {
 			src_index++;
@@ -67,8 +74,14 @@ static LexTokenResult lex_statement_end(const char* src, uint32_t src_index) {
 		result.success = true;
 		result.token = (Token){TOKEN_STATEMENT_END, 0};
 		result.chars_read = 1;
+
+		while(src[src_index + result.chars_read] == '\n') {
+			result.chars_read++;
+		}
+
 		return result;
 	}
+
 
 	result.success = false;
 	return result;

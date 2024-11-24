@@ -1,5 +1,9 @@
+~ Apples here
 word apple : 8 + 4 * 3 + 2
 word anchovie
-anchovie : 2 * apple + 3 * 2
-out anchovie
+anchovie : apple * 2 + 4
+
+~ This will print apples
+~ It's not for the faint of heart
+print anchovie
 exit apple
