@@ -23,11 +23,13 @@ fn main : byte argc long argv
 	byte b : 2
 	byte c
 
-	if (c < 8) goto after_add
+	mark begin_loop
+	if (c < 8) goto end_loop
 	add &c, a, b
 	out c
+	goto begin_loop
+	mark end_loop
 
-	mark after_add
 	exit c
 
 	~ Nested functions do not share a scope with their outer enclosure. Instead,

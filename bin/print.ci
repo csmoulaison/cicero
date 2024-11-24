@@ -1,0 +1,3 @@
+word apple : 10
+print apple + 10
+exit apple

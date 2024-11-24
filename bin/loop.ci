@@ -1,6 +1,6 @@
 word apple : 0
-mark begin
-print apple
+mark loop
 apple : apple + 1
-jump begin
+print apple
+jump loop
 exit 0
