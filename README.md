@@ -5,7 +5,7 @@ The compiler code is fairly straightforward and imperative, and there's a lot of
 
 This has been one of the most fun and interesting projects I've worked on, and I strongly encourage other programmers to take a crack at making a simple language of their own.
 ## Usage
-Use **cicero \<filename>** to compile a Cicero source file. On success, outputs **program.asm**, **program.o**, and **program** (the final executable).
+Use **cicero \<filename>** to compile a Cicero source file. Use **cicero help** for compiler options. On success, outputs **out** executable by default.
 ### Example Cicero source file
 ```
 word this
@@ -37,11 +37,11 @@ Currently, a small number of features are implemented:
 - Arithmetic with operator precedence parsing (still needs parenthesis grouping)
 - **print** statements
 - **mark" and **jump** statements, which are labels and gotos
+- Conditional statements
 - **exit** statements
 - Code comments
 
 Future features include (in rough order of planned implementation):
-- Conditional jumps
 - User input
 - Pointers
 - More contextual and uniform error messages
@@ -57,4 +57,5 @@ Future features include (in rough order of planned implementation):
 - **word \<identifier> : \<expression>** - Shorthand for declaring and defining a variable in one line.
 - **mark \<identifier>** - Marks a point in the program that can be jumped to by referencing the identifier.
 - **jump \<identifier>** - Jumps to a point in the program with a matching mark statement.
+- **if (\<conditional> \<statement>** - Runs the statement if the conditional is true. (Comparisons between numbers using the relevant operators { <, >, !, = }.
 - **print \<expression>** - Prints the evaluated expression.
