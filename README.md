@@ -6,19 +6,42 @@ The compiler code is fairly straightforward and imperative, and there's a lot of
 This has been one of the most fun and interesting projects I've worked on, and I strongly encourage other programmers to take a crack at making a simple language of their own.
 ## Usage
 Use **cicero \<filename>** to compile a Cicero source file. Use **cicero help** for compiler options. On success, outputs **out** executable by default.
-### Example Cicero source file
+### Example Cicero source file (examples/demo.ci)
 ```
-word this
-this : 2
-word that : this + 2
-word other : this + that
+~ Demonstrates all current language features
+~ Comments are preceded by a tilde
+~ Variable declaration and definition
+word var : 3
+var : 2
 
-~ This is a comment
-mark begin_loop
-print other
-other : other + 1
-if (other < 10) jump begin_loop
+~ Shorthand for the above
+word var2 : 4
 
+~ Precedence parsing: Still no parentheses grouping
+word parsed : var * var2 + 3 % 2 - 10 / 2
+
+~ Print statement
+print parsed
+
+~ Jump statement referencing a later mark statement
+jump skip
+
+~ This statement will never run
+print 0
+
+~ Mark statement: can be jumped to with a jump statement
+mark skip
+
+~ Marks and jumps to implement a for loop, with a conditional if statement
+word count : 0
+mark loop
+
+print count
+count : count + 1
+
+if (count < 10) jump loop
+
+~ Exit statement
 exit 0
 ```
 The above code does the following operations:
