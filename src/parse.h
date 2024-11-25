@@ -4,11 +4,7 @@
 #include <stdbool.h>
 #include "token.h"
 
-#define ASM_PATH "program.asm"
-#define OBJECT_PATH "program.o"
-#define EXE_PATH "program"
 #define EXPR_REF_STR_MAX 32
-
 #define VARS_MAX 256
 #define MARKS_MAX 256
 
@@ -55,7 +51,7 @@ struct {
 	uint32_t jumps_len;
 } typedef ParseContext;
 
-void parse_and_compile(Token* tokens);
+void parse_and_compile(Token* tokens, const char* out_path);
 // Top level parsing
 static void parse_statement(ParseContext* context);
 static void parse_exit(ParseContext* context);

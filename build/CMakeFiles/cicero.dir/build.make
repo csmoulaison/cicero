@@ -73,57 +73,57 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o: CMakeFiles/cic
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o: /home/csmoulaison/repos/cicero/src/file.c
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o: CMakeFiles/cicero.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/csmoulaison/repos/cicero/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o -c /home/csmoulaison/repos/cicero/src/file.c
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o -c /home/csmoulaison/repos/cicero/src/file.c
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.i"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/file.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/file.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.i
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.s"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/file.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/file.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.s
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: CMakeFiles/cicero.dir/flags.make
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: /home/csmoulaison/repos/cicero/src/lex.c
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: CMakeFiles/cicero.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/csmoulaison/repos/cicero/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o -c /home/csmoulaison/repos/cicero/src/lex.c
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o -c /home/csmoulaison/repos/cicero/src/lex.c
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.i"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/lex.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/lex.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.i
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.s"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/lex.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/lex.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.s
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: CMakeFiles/cicero.dir/flags.make
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: /home/csmoulaison/repos/cicero/src/main.c
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: CMakeFiles/cicero.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/csmoulaison/repos/cicero/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o -c /home/csmoulaison/repos/cicero/src/main.c
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o -c /home/csmoulaison/repos/cicero/src/main.c
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.i"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/main.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/main.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.i
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.s"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/main.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/main.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.s
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: CMakeFiles/cicero.dir/flags.make
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: /home/csmoulaison/repos/cicero/src/parse.c
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: CMakeFiles/cicero.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/csmoulaison/repos/cicero/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o -c /home/csmoulaison/repos/cicero/src/parse.c
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o -MF CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o.d -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o -c /home/csmoulaison/repos/cicero/src/parse.c
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.i"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/parse.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/csmoulaison/repos/cicero/src/parse.c > CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.i
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.s"
-	/sbin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/parse.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/csmoulaison/repos/cicero/src/parse.c -o CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.s
 
 # Object files for target cicero
 cicero_OBJECTS = \

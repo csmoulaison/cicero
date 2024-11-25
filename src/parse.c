@@ -5,11 +5,14 @@
 #define STACK_ALIGN 16
 #define IF_LABEL "CICERO_IF_LABEL"
 
-void parse_and_compile(Token* tokens) {
+void parse_and_compile(Token* tokens, const char* out_path) {
 	printf("\nParsing and emitting nasm...\n");
 
+	char asm_path[4096];
+	sprintf(asm_path, "%s.asm", out_path);
+
 	ParseContext context;
-	context.out_file = fopen(ASM_PATH, "w");
+	context.out_file = fopen(asm_path, "w");
 	context.tokens = tokens;
 	context.token_index = 0;
 	context.if_count = 0;
@@ -234,10 +237,16 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 
 		switch(operator_token->type) {
 		case TOKEN_MULTIPLY:
-			right_precedence = 4;
+			right_precedence = 3;
+			break;
+		case TOKEN_DIVIDE:
+			right_precedence = 3;
+			break;
+		case TOKEN_MODULO:
+			right_precedence = 3;
 			break;
 		case TOKEN_SUB:
-			right_precedence = 3;
+			right_precedence = 2;
 			break;
 		case TOKEN_ADD:
 			right_precedence = 2;
@@ -256,11 +265,19 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 		// Recurse
 		Expression right = parse_expression(context, right_precedence);
 
+		// Compile time evaluation
 		if(left.type == EXPR_LITERAL && right.type == EXPR_LITERAL) {
-			// Two compile-time-calculated expressions can operated on at compile time
 			switch(operator_token->type) {
 			case TOKEN_MULTIPLY:
 				left.value.number = left.value.number * right.value.number;
+				break;
+			// TODO: Is this consistent with asm functionality?
+			case TOKEN_DIVIDE:
+				left.value.number = left.value.number / right.value.number;
+				break;
+			// TODO: Is this consistent with asm functionality?
+			case TOKEN_MODULO:
+				left.value.number = left.value.number % right.value.number;
 				break;
 			case TOKEN_SUB:
 				left.value.number = left.value.number - right.value.number;
@@ -269,35 +286,36 @@ static Expression parse_expression(ParseContext* context, uint8_t precedence) {
 				left.value.number = left.value.number + right.value.number;
 				break;
 			default:
-				printf("E1 After peeking priority, stil got an invalid token. What's wrong?\n");	
+				printf("After peeking priority, stil got an invalid token. What's wrong?\n");	
 				exit(1);
 			}
+		// Runtime evaluation
 		} else {
-			// If one or more of the two expressions is not compile-time-calculated,
-			// the relevant calculations are written in asm and pushed on the stack.
-			char opcode[4];
-			switch(operator_token->type) {
-			case TOKEN_MULTIPLY:
-				strcpy(opcode, "mul");
-				break;
-			case TOKEN_SUB:
-				strcpy(opcode, "sub");
-				break;
-			case TOKEN_ADD:
-				strcpy(opcode, "add");
-				break;
-			default:
-				printf("E2 After peeking priority, stil got an invalid token. What's wrong?\n");	
-			}
-
 			populate_expression_ref_string(&left);
 			fprintf(context->out_file, "mov rax, %s\n", left.reference_string);
 			fprintf(context->out_file, "mov rbx, %s\n", right.reference_string);
 
-			if(operator_token->type == TOKEN_MULTIPLY) {
+			char opcode[4];
+			switch(operator_token->type) {
+			case TOKEN_MULTIPLY:
 				fprintf(context->out_file, "mul rbx\n", opcode);
-			} else {
-				fprintf(context->out_file, "%s rax, rbx\n", opcode);
+				break;
+			case TOKEN_DIVIDE:
+				fprintf(context->out_file, "div rbx\n", opcode);
+				break;
+			case TOKEN_MODULO:
+				fprintf(context->out_file, "mov edx, 0\n", opcode);
+				fprintf(context->out_file, "div rbx\n", opcode);
+				fprintf(context->out_file, "mov eax, edx\n", opcode);
+				break;
+			case TOKEN_SUB:
+				fprintf(context->out_file, "sub rax, rbx\n");
+				break;
+			case TOKEN_ADD:
+				fprintf(context->out_file, "add rax, rbx\n");
+				break;
+			default:
+				printf("E2 After peeking priority, stil got an invalid token. What's wrong?\n");	
 			}
 
 			left.type = EXPR_RUNTIME;

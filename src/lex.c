@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "generated/lex_procedures.h"
-#include "generated/token_to_keyword_map.h"
+#include "lex_procedures.h"
+#include "token_to_keyword_map.h"
 
 // Converts a source file into lexical tokens.
 void lex(const char* src, Token* tokens) {
@@ -47,6 +47,10 @@ void lex(const char* src, Token* tokens) {
 
 		if(!lex_result.success) {
 			printf("Error: No valid lexical token at index %i.\n", src_index);
+
+			printf("\nSource dump from the point of error:\n\n");
+			printf("%s\n", (char*)&(src[src_index]));
+
 			goto abort_lexical_analysis;
 		}
 	}

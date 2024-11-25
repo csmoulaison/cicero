@@ -1,9 +1,0 @@
-word apple
-apple : 0
-
-mark loop
-print apple
-apple : apple + 1
-if (apple < 10) jump loop
-
-exit 0

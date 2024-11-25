@@ -1,1 +1,0 @@
-/sbin/cc CMakeFiles/cicero_source_generator.dir/home/csmoulaison/repos/cicero/build/cicero_generators/src/main.c.o -o /home/csmoulaison/repos/cicero/build/cicero_generators/bin/cicero_source_generator

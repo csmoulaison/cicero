@@ -1,5 +1,5 @@
 #pragma once
-#include "generated/token_type.h"
+#include "token_type.h"
 
 #define IDENTIFIER_MAX_LEN 32
 

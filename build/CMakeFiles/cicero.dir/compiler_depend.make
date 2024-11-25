@@ -64,11 +64,11 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/file.c.o: /home/csmoulai
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdint.h
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: /home/csmoulaison/repos/cicero/src/lex.c \
-  /home/csmoulaison/repos/cicero/src/generated/lex_procedures.h \
-  /home/csmoulaison/repos/cicero/src/generated/token_to_keyword_map.h \
-  /home/csmoulaison/repos/cicero/src/generated/token_type.h \
   /home/csmoulaison/repos/cicero/src/lex.h \
+  /home/csmoulaison/repos/cicero/src/lex_procedures.h \
   /home/csmoulaison/repos/cicero/src/token.h \
+  /home/csmoulaison/repos/cicero/src/token_to_keyword_map.h \
+  /home/csmoulaison/repos/cicero/src/token_type.h \
   /usr/include/alloca.h \
   /usr/include/bits/atomic_wide_counter.h \
   /usr/include/bits/byteswap.h \
@@ -137,10 +137,10 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/lex.c.o: /home/csmoulais
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: /home/csmoulaison/repos/cicero/src/main.c \
   /home/csmoulaison/repos/cicero/src/file.h \
-  /home/csmoulaison/repos/cicero/src/generated/token_type.h \
   /home/csmoulaison/repos/cicero/src/lex.h \
   /home/csmoulaison/repos/cicero/src/parse.h \
   /home/csmoulaison/repos/cicero/src/token.h \
+  /home/csmoulaison/repos/cicero/src/token_type.h \
   /usr/include/alloca.h \
   /usr/include/bits/atomic_wide_counter.h \
   /usr/include/bits/byteswap.h \
@@ -168,11 +168,13 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: /home/csmoulai
   /usr/include/bits/types/__FILE.h \
   /usr/include/bits/types/__fpos64_t.h \
   /usr/include/bits/types/__fpos_t.h \
+  /usr/include/bits/types/__locale_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__sigset_t.h \
   /usr/include/bits/types/clock_t.h \
   /usr/include/bits/types/clockid_t.h \
   /usr/include/bits/types/cookie_io_functions_t.h \
+  /usr/include/bits/types/locale_t.h \
   /usr/include/bits/types/sigset_t.h \
   /usr/include/bits/types/struct_FILE.h \
   /usr/include/bits/types/struct_timespec.h \
@@ -194,6 +196,8 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: /home/csmoulai
   /usr/include/stdint.h \
   /usr/include/stdio.h \
   /usr/include/stdlib.h \
+  /usr/include/string.h \
+  /usr/include/strings.h \
   /usr/include/sys/cdefs.h \
   /usr/include/sys/select.h \
   /usr/include/sys/types.h \
@@ -203,9 +207,9 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/main.c.o: /home/csmoulai
   /usr/lib/gcc/x86_64-pc-linux-gnu/14.1.1/include/stdint.h
 
 CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: /home/csmoulaison/repos/cicero/src/parse.c \
-  /home/csmoulaison/repos/cicero/src/generated/token_type.h \
   /home/csmoulaison/repos/cicero/src/parse.h \
   /home/csmoulaison/repos/cicero/src/token.h \
+  /home/csmoulaison/repos/cicero/src/token_type.h \
   /usr/include/alloca.h \
   /usr/include/bits/atomic_wide_counter.h \
   /usr/include/bits/byteswap.h \
@@ -286,9 +290,9 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: /home/csmoula
 
 /usr/include/bits/types/__locale_t.h:
 
-/home/csmoulaison/repos/cicero/src/token.h:
+/home/csmoulaison/repos/cicero/src/token_to_keyword_map.h:
 
-/home/csmoulaison/repos/cicero/src/generated/token_type.h:
+/home/csmoulaison/repos/cicero/src/token.h:
 
 /home/csmoulaison/repos/cicero/src/lex.c:
 
@@ -325,6 +329,8 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: /home/csmoula
 /usr/include/alloca.h:
 
 /home/csmoulaison/repos/cicero/src/file.c:
+
+/home/csmoulaison/repos/cicero/src/token_type.h:
 
 /usr/include/bits/libc-header-start.h:
 
@@ -368,8 +374,6 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: /home/csmoula
 
 /usr/include/bits/types/clock_t.h:
 
-/home/csmoulaison/repos/cicero/src/generated/lex_procedures.h:
-
 /usr/include/bits/atomic_wide_counter.h:
 
 /usr/include/bits/types/clockid_t.h:
@@ -400,6 +404,8 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: /home/csmoula
 
 /usr/include/stdlib.h:
 
+/home/csmoulaison/repos/cicero/src/lex_procedures.h:
+
 /usr/include/bits/stdint-uintn.h:
 
 /usr/include/bits/types/cookie_io_functions_t.h:
@@ -415,8 +421,6 @@ CMakeFiles/cicero.dir/home/csmoulaison/repos/cicero/src/parse.c.o: /home/csmoula
 /usr/include/gnu/stubs.h:
 
 /usr/include/stdint.h:
-
-/home/csmoulaison/repos/cicero/src/generated/token_to_keyword_map.h:
 
 /usr/include/bits/types/timer_t.h:
 

@@ -1,0 +1,24 @@
+~ Prints the Fibonacci sequence up to a given max
+word max : 10000
+word num1
+word num2 : 0
+word tmp
+
+mark loop
+print num2
+
+~ Base case for the beginning of the sequence
+if (num2 ! 0) jump notzero
+num1 : 0
+num2 : 1
+jump loop
+
+~ General case after first iteration
+mark notzero
+tmp : num2
+num2 : num1 + num2
+num1 : tmp
+
+if (num2 < max) jump loop
+
+exit 0

@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <stdbool.h>
-#include "generated/token_type.h"
+#include "token_type.h"
 #include "token.h"
 
 // 10-3-24 lex refactor
