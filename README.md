@@ -44,16 +44,6 @@ if (count < 10) jump loop
 ~ Exit statement
 exit 0
 ```
-The above code does the following operations:
-- Declares a variable called **this**, making space for it on the stack
-- Declares variable **that**, setting it to the value of **this + 2**
-- Declares **other** as **this + that**
-- Marks the beginning of a looping statement as **begin_loop**
-- Prints the current value of **other**
-- Iterates **other** by 1
-- Jumps to the **begin_loop** mark if **other** is less than 10, repeating the print and iterate statements until that condition is satisfied.
-
-The output is the numbers printed in order from 0 to 10 before the program exits.
 ## Features
 Currently, a small number of features are implemented:
 - Variables and literal values as 64-bit integers
