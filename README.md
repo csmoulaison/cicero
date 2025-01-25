@@ -1,5 +1,5 @@
 # Cicero: Low-Level Compiled Language
-Cicero is a simple language written in C as a learning project. It compiles to 64 bit NASM assembly and is assembled and linked with GCC.
+Cicero is a simple language written in C as a learning project. It compiles to 64 bit NASM assembly and is assembled and linked with GCC. The compiler executable is found at **bin/cicero**, and has only been built on my Arch Linux machine.
 
 The compiler code is fairly straightforward and imperative, and there's a lot of cleanup to do from it's current state. It utilizes a single-pass, recursive descent parser. Operator precedence parsing is implemented using the Pratt parsing approach, which is so simple it feels like cheating. NASM code is printed directly the a .asm file while parsing. I need to do some work soon to extricate these two concerns.
 
